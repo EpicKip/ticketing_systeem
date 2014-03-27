@@ -1,6 +1,6 @@
 __author__ = 'aaron'
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -35,7 +35,7 @@ class EventTemplate(models.Model):
     """
         Template class
     """
-    somedata = models.CharField(max_length=1000, verbose_name=_('Some data'))
+    text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
         verbose_name = _('event template')
@@ -46,7 +46,7 @@ class TicketTemplate(models.Model):
     """
         Template class
     """
-    somedata = models.CharField(max_length=1000, verbose_name=_('Some data'))
+    text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
         verbose_name = _('ticket template')

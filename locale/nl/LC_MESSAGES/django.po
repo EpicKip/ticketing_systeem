@@ -1,0 +1,151 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-27 16:36+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: dashboard.py:26
+msgid "Ticketing"
+msgstr "Ticketing"
+
+#: dashboard.py:36
+msgid "Users"
+msgstr "Gebruikers"
+
+#: dashboard.py:44
+msgid "Recent changes"
+msgstr "Recente aanpassingen"
+
+#: tickets/models.py:10
+msgid "Organizer"
+msgstr "Organisator"
+
+#: tickets/models.py:11
+msgid "Moderator"
+msgstr "Moderator"
+
+#: tickets/models.py:12
+msgid "Scanner"
+msgstr "Scanner"
+
+#: tickets/models.py:24 tickets/models.py:107
+msgid "user"
+msgstr "gebruiker"
+
+#: tickets/models.py:30 tickets/models.py:88
+msgid "customer"
+msgstr "klant"
+
+#: tickets/models.py:31
+msgid "customers"
+msgstr "klanten"
+
+#: tickets/models.py:38 tickets/models.py:49
+msgid "Text"
+msgstr "Tekst"
+
+#: tickets/models.py:41 tickets/models.py:72
+msgid "event template"
+msgstr "evenement template"
+
+#: tickets/models.py:42
+msgid "event templates"
+msgstr "evenement tamplates"
+
+#: tickets/models.py:52 tickets/models.py:90
+msgid "ticket template"
+msgstr "ticket template"
+
+#: tickets/models.py:53
+msgid "ticket templates"
+msgstr "ticket template"
+
+#: tickets/models.py:61
+msgid "name"
+msgstr "naam"
+
+#: tickets/models.py:62
+msgid "location"
+msgstr "locatie"
+
+#: tickets/models.py:63
+msgid "date"
+msgstr "datum"
+
+#: tickets/models.py:64
+msgid "start time"
+msgstr "start tijd"
+
+#: tickets/models.py:65
+msgid "end time"
+msgstr "eind tijd"
+
+#: tickets/models.py:66
+msgid "sales start"
+msgstr "verkoop start"
+
+#: tickets/models.py:67
+msgid "sales end"
+msgstr "verkoop eind"
+
+#: tickets/models.py:68
+msgid "event active"
+msgstr "evenement actief"
+
+#: tickets/models.py:69
+msgid "price"
+msgstr "prijs"
+
+#: tickets/models.py:70
+msgid "maximum"
+msgstr "maximum"
+
+#: tickets/models.py:71
+msgid "information"
+msgstr "informatie"
+
+#: tickets/models.py:78 tickets/models.py:89
+msgid "event"
+msgstr "evenement"
+
+#: tickets/models.py:79
+msgid "events"
+msgstr "evenementen"
+
+#: tickets/models.py:87
+msgid "ticket active"
+msgstr "ticket actief"
+
+#: tickets/models.py:96
+msgid "ticket"
+msgstr "ticket"
+
+#: tickets/models.py:97
+msgid "tickets"
+msgstr "tickets"
+
+#: tickets/models.py:111
+msgid "staff type"
+msgstr "personeels type"
+
+#: tickets/models.py:128
+msgid "staff member"
+msgstr "personeels lid"
+
+#: tickets/models.py:129
+msgid "staff members"
+msgstr "personeels leden"
