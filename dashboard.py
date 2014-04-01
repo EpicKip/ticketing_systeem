@@ -21,7 +21,7 @@ class CustomIndexDashboard(Dashboard):
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
 
-        # append an app list module for "Applications"
+        # append an app list module for "Ticketing"
         self.children.append(modules.ModelList(
             _('Ticketing'),
             collapsible=True,

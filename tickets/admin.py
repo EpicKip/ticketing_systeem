@@ -1,7 +1,8 @@
 __author__ = 'aaron'
 
 from django.contrib import admin
-from models import *
+from tickets.models import *
+from django.contrib.auth import models
 
 class CustomerAdmin(admin.ModelAdmin):
     pass
@@ -12,8 +13,10 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class TicketAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id','get_firstname')
 
+    def get_firstname(self, obj):
+        return obj.User.first_name
 
 class StaffMemberAdmin(admin.ModelAdmin):
     list_display = ('full_name','staff_type',)
