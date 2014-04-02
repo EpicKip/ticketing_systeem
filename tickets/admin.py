@@ -13,16 +13,16 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id','get_firstname')
+    list_display = ('id', 'full_name')
 
-    def get_firstname(self, obj):
-        return obj.User.first_name
 
 class StaffMemberAdmin(admin.ModelAdmin):
     list_display = ('full_name','staff_type',)
 
 
 class TicketTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'id')
+
     class Media:
         js = [
         'grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js',
@@ -32,6 +32,8 @@ class TicketTemplateAdmin(admin.ModelAdmin):
 
 
 class EventTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'id')
+
     class Media:
         js = [
         'grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js',

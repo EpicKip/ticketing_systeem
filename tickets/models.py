@@ -35,6 +35,7 @@ class EventTemplate(models.Model):
     """
         Template class
     """
+    name = models.CharField(max_length=100,verbose_name=_('Name'))
     text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
@@ -46,6 +47,7 @@ class TicketTemplate(models.Model):
     """
         Template class
     """
+    name = models.CharField(max_length=100,verbose_name=_('Name'))
     text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
@@ -95,6 +97,14 @@ class Ticket(models.Model):
     class Meta:
         verbose_name = _('ticket')
         verbose_name_plural = _('tickets')
+
+    @property
+    def full_name(self):
+        if self.customer.user.first_name or self.user.last_name:
+            full = self.customer.user.first_name + " " + self.customer.user.last_name
+        else:
+            full = "(" + str(self.customer.user) + ")"
+        return unicode(full)
 
 
 class StaffMember(models.Model):
