@@ -23,7 +23,7 @@ class Customer(models.Model):
         User,
         verbose_name=_('user'))
 
-    def __unicode__(self):
+    def full_name(self):
         return unicode(self.user.first_name + " " + self.user.last_name)
 
     class Meta:
@@ -89,6 +89,7 @@ class Ticket(models.Model):
     ticket_active = models.BooleanField(verbose_name=_('ticket active'))
     customer = models.ForeignKey('Customer', verbose_name=_('customer'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
+    #MOET HIER NOG LATEN KIEZEN UIT NAAM, NIET OBJECT
     template = models.ForeignKey('TicketTemplate', verbose_name=_('ticket template'))
 
     def __unicode__(self):

@@ -5,7 +5,7 @@ from tickets.models import *
 from django.contrib.auth import models
 
 class CustomerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'full_name')
 
 
 class EventAdmin(admin.ModelAdmin):

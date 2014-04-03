@@ -43,7 +43,7 @@ class CustomIndexDashboard(Dashboard):
         self.children.append(modules.RecentActions(
             _('Recent changes'),
             limit=5,
-            collapsible=False,
+            collapsible=True,
             column=3,
         ))
 
