@@ -1,3 +1,6 @@
+from django.core.exceptions import ValidationError
+from django.forms import forms
+
 __author__ = 'aaron'
 
 from django.contrib import admin
@@ -5,15 +8,17 @@ from tickets.models import *
 from django.contrib.auth import models
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'full_name')
+    def name_clickable(self, obj):
+        return '<a href="%s"> %s </a>' % (obj.user.id, obj.full_name())
+    name_clickable.allow_tags = True
+    list_display = ('id', 'name_clickable')
 
 
 class EventAdmin(admin.ModelAdmin):
-    pass
-
+    list_display = ('id','name', 'start_time')
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'full_name')
+    list_display = ('id', 'event_name', 'full_name')
 
 
 class StaffMemberAdmin(admin.ModelAdmin):
@@ -21,7 +26,7 @@ class StaffMemberAdmin(admin.ModelAdmin):
 
 
 class TicketTemplateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id')
+    list_display = ('id', 'name')
 
     class Media:
         js = [

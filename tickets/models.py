@@ -1,3 +1,6 @@
+from django.core.exceptions import ValidationError
+from django.forms import forms
+
 __author__ = 'aaron'
 
 from django.utils.translation import ugettext_lazy as _
@@ -11,8 +14,6 @@ STAFF_TYPES = (
     ('MO', _('Moderator')),
     ('SC', _('Scanner'))
 )
-
-
 
 
 class Customer(models.Model):
@@ -30,6 +31,8 @@ class Customer(models.Model):
         verbose_name = _('customer')
         verbose_name_plural = _('customers')
 
+    def __str__(self):
+        return self.user.username
 
 class EventTemplate(models.Model):
     """
@@ -41,6 +44,9 @@ class EventTemplate(models.Model):
     class Meta:
         verbose_name = _('event template')
         verbose_name_plural = _('event templates')
+
+    def __str__(self):
+        return self.name
 
 
 class TicketTemplate(models.Model):
@@ -54,17 +60,17 @@ class TicketTemplate(models.Model):
         verbose_name = _('ticket template')
         verbose_name_plural = _('ticket templates')
 
+    def __str__(self):
+        return self.name
 
 class Event(models.Model):
     """
         Event class
     """
-
     name = models.CharField(max_length=100, verbose_name=_('name'))
-    location = models.CharField(max_length=200, verbose_name=_('location'), blank=True, null=True)
-    date = models.DateTimeField(verbose_name=_('date'))
-    start_time = models.TimeField(verbose_name=_('start time'))
-    end_time = models.TimeField(verbose_name=_('end time'))
+    location = models.CharField(max_length=200, verbose_name=_('location'))
+    start_time = models.DateTimeField(verbose_name=_('start time'))
+    end_time = models.DateTimeField(verbose_name=_('end time'))
     sales_start = models.DateField(verbose_name=_('sales start'))
     sales_end = models.DateField(verbose_name=_('sales end'))
     event_active = models.BooleanField(verbose_name=_('event active'))
@@ -72,6 +78,14 @@ class Event(models.Model):
     maximum = models.IntegerField(verbose_name=_('maximum'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     template = models.ForeignKey('EventTemplate', verbose_name=_('event template'))
+
+    def clean(self):
+        if self.sales_start > self.sales_end:
+            raise ValidationError(_('The start of the sales can\'t be after the end...'))
+        if self.start_time > self.end_time:
+            raise ValidationError(_('The start of the event can\'t be after the end...'))
+        if self.start_time.date() < self.sales_end:
+            raise ValidationError(_('The sales can\'t end more then a day after the event itself...'))
 
     def __unicode__(self):
         return unicode(self.name)
@@ -89,7 +103,6 @@ class Ticket(models.Model):
     ticket_active = models.BooleanField(verbose_name=_('ticket active'))
     customer = models.ForeignKey('Customer', verbose_name=_('customer'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
-    #MOET HIER NOG LATEN KIEZEN UIT NAAM, NIET OBJECT
     template = models.ForeignKey('TicketTemplate', verbose_name=_('ticket template'))
 
     def __unicode__(self):
@@ -106,6 +119,10 @@ class Ticket(models.Model):
         else:
             full = "(" + str(self.customer.user) + ")"
         return unicode(full)
+
+    @property
+    def event_name(self):
+        return unicode(self.event.name)
 
 
 class StaffMember(models.Model):
