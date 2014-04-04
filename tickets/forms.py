@@ -21,3 +21,4 @@ class StaffMemberForm(forms.ModelForm):
         fields = ['staff_type', 'user']
 
     def clean(self):
+        elif
