@@ -129,6 +129,7 @@ class StaffMember(models.Model):
 
     user = models.OneToOneField(
         User,
+        help_text=_('Select existing user or create a new one using the form below'),
         verbose_name=_('user'))
     staff_type = models.CharField(
         max_length=3,

@@ -67,9 +67,8 @@ ROOT_URLCONF = 'ticketing_systeem.urls'
 WSGI_APPLICATION = 'ticketing_systeem.wsgi.application'
 
 LOCALE_PATHS = (
-    '/locale/',
+    os.path.join(BASE_DIR, 'locale'),
 )
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -86,7 +85,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'us-en'
+LANGUAGE_CODE = 'nl'
 
 
 TIME_ZONE = 'Europe/Amsterdam'

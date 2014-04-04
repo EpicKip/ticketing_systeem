@@ -27,6 +27,7 @@ class TicketAdmin(admin.ModelAdmin):
     search_fields = ['id', 'event__name', 'full_name'
     ]
 
+
 class StaffMemberAdmin(admin.ModelAdmin):
     def name(self, obj):
         return '<a href="%s"> %s </a>' % (obj.user.id, obj.full_name)
