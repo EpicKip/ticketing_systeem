@@ -6,27 +6,39 @@ __author__ = 'aaron'
 from django.contrib import admin
 from tickets.models import *
 from django.contrib.auth import models
+from forms import *
 
 class CustomerAdmin(admin.ModelAdmin):
-    def name_clickable(self, obj):
+    def name(self, obj):
         return '<a href="%s"> %s </a>' % (obj.user.id, obj.full_name())
-    name_clickable.allow_tags = True
-    list_display = ('id', 'name_clickable')
-
+    name.allow_tags = True
+    list_display = ('id', 'name')
+    search_fields = ['id', 'user__first_name', 'user__last_name']
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('id','name', 'start_time')
+    search_fields = ['id', 'name']
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'event_name', 'full_name')
-
+    def name(self, obj):
+        return '<a href="%s"> %s </a>' % (obj.customer.user.id, obj.full_name())
+    name.allow_tags = True
+    list_display = ('id', 'event', 'name')
+    search_fields = ['id', 'event__name', 'full_name'
+    ]
 
 class StaffMemberAdmin(admin.ModelAdmin):
-    list_display = ('full_name','staff_type',)
-
+    def name(self, obj):
+        return '<a href="%s"> %s </a>' % (obj.user.id, obj.full_name)
+    name.allow_tags = True
+    list_display = ('name','staff_type',)
+    search_fields = ['id', 'staff_type'#, 'name'
+    ]
+    form = StaffMemberForm
 
 class TicketTemplateAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+    search_fields = ['id', 'name']
 
     class Media:
         js = [
@@ -38,6 +50,7 @@ class TicketTemplateAdmin(admin.ModelAdmin):
 
 class EventTemplateAdmin(admin.ModelAdmin):
     list_display = ('name', 'id')
+    search_fields = ['id', 'name']
 
     class Media:
         js = [

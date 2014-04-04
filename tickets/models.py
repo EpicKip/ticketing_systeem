@@ -120,9 +120,6 @@ class Ticket(models.Model):
             full = "(" + str(self.customer.user) + ")"
         return unicode(full)
 
-    @property
-    def event_name(self):
-        return unicode(self.event.name)
 
 
 class StaffMember(models.Model):
