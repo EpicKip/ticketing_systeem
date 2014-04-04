@@ -21,4 +21,6 @@ class StaffMemberForm(forms.ModelForm):
         fields = ['staff_type', 'user']
 
     def clean(self):
-        elif
+        if self.username == None & StaffMember.staff_type == None:
+            raise ValidationError(_('Choose 1'))
+
