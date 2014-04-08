@@ -1,8 +1,6 @@
-from django.core.exceptions import ValidationError
-from django.forms import forms
-
 __author__ = 'aaron'
 
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
@@ -34,11 +32,12 @@ class Customer(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class EventTemplate(models.Model):
     """
         Template class
     """
-    name = models.CharField(max_length=100,verbose_name=_('Name'))
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
     text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
@@ -53,7 +52,7 @@ class TicketTemplate(models.Model):
     """
         Template class
     """
-    name = models.CharField(max_length=100,verbose_name=_('Name'))
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
     text = models.TextField(verbose_name=_('Text'))
 
     class Meta:
@@ -62,6 +61,7 @@ class TicketTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Event(models.Model):
     """
@@ -121,16 +121,12 @@ class Ticket(models.Model):
         return unicode(full)
 
 
-
 class StaffMember(models.Model):
     """
         Staff member class
     """
 
-    user = models.OneToOneField(
-        User,
-        help_text=_('Select existing user or create a new one using the form below'),
-        verbose_name=_('user'))
+    user = models.ForeignKey(User, verbose_name=_('user'))
     staff_type = models.CharField(
         max_length=3,
         choices=STAFF_TYPES,
@@ -147,8 +143,6 @@ class StaffMember(models.Model):
         else:
             full = "(" + str(self.user) + ")"
         return unicode(full)
-
-
 
     class Meta:
         verbose_name = _('staff member')

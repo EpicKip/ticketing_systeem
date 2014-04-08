@@ -30,7 +30,7 @@ class TicketAdmin(admin.ModelAdmin):
 
 class StaffMemberAdmin(admin.ModelAdmin):
     def name(self, obj):
-        return '<a href="%s"> %s </a>' % (obj.user.id, obj.full_name)
+        return '<a href="%s"> %s </a>' % (obj.id, obj.full_name)
     name.allow_tags = True
     list_display = ('name','staff_type',)
     search_fields = ['id', 'staff_type'#, 'name'
