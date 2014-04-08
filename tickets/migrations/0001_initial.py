@@ -18,14 +18,16 @@ class Migration(SchemaMigration):
         # Adding model 'EventTemplate'
         db.create_table(u'tickets_eventtemplate', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('somedata', self.gf('django.db.models.fields.CharField')(max_length=1000)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('text', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'tickets', ['EventTemplate'])
 
         # Adding model 'TicketTemplate'
         db.create_table(u'tickets_tickettemplate', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('somedata', self.gf('django.db.models.fields.CharField')(max_length=1000)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('text', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'tickets', ['TicketTemplate'])
 
@@ -33,10 +35,9 @@ class Migration(SchemaMigration):
         db.create_table(u'tickets_event', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('location', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('start_time', self.gf('django.db.models.fields.TimeField')()),
-            ('end_time', self.gf('django.db.models.fields.TimeField')()),
+            ('location', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('start_time', self.gf('django.db.models.fields.DateTimeField')()),
+            ('end_time', self.gf('django.db.models.fields.DateTimeField')()),
             ('sales_start', self.gf('django.db.models.fields.DateField')()),
             ('sales_end', self.gf('django.db.models.fields.DateField')()),
             ('event_active', self.gf('django.db.models.fields.BooleanField')()),
@@ -130,24 +131,24 @@ class Migration(SchemaMigration):
         },
         u'tickets.event': {
             'Meta': {'object_name': 'Event'},
-            'date': ('django.db.models.fields.DateTimeField', [], {}),
-            'end_time': ('django.db.models.fields.TimeField', [], {}),
+            'end_time': ('django.db.models.fields.DateTimeField', [], {}),
             'event_active': ('django.db.models.fields.BooleanField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'information': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'maximum': ('django.db.models.fields.IntegerField', [], {}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'price': ('django.db.models.fields.IntegerField', [], {}),
             'sales_end': ('django.db.models.fields.DateField', [], {}),
             'sales_start': ('django.db.models.fields.DateField', [], {}),
-            'start_time': ('django.db.models.fields.TimeField', [], {}),
+            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
             'template': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.EventTemplate']"})
         },
         u'tickets.eventtemplate': {
             'Meta': {'object_name': 'EventTemplate'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'somedata': ('django.db.models.fields.CharField', [], {'max_length': '1000'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'text': ('django.db.models.fields.TextField', [], {})
         },
         u'tickets.staffmember': {
             'Meta': {'object_name': 'StaffMember'},
@@ -166,7 +167,8 @@ class Migration(SchemaMigration):
         u'tickets.tickettemplate': {
             'Meta': {'object_name': 'TicketTemplate'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'somedata': ('django.db.models.fields.CharField', [], {'max_length': '1000'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'text': ('django.db.models.fields.TextField', [], {})
         }
     }
 

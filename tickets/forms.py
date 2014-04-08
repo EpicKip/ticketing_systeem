@@ -11,6 +11,7 @@ from django.core import validators
 import re
 from django.utils.translation import ugettext_lazy as _
 
+
 class StaffMemberForm(forms.ModelForm):
     username = forms.CharField(label=_('Username'))
     first_name = forms.CharField(label=_('First name'))
@@ -21,6 +22,13 @@ class StaffMemberForm(forms.ModelForm):
         fields = ['staff_type', 'user']
 
     def clean(self):
-        if self.username == None & StaffMember.staff_type == None:
+        cleaned_data = self.cleaned_data
+        username = cleaned_data.get("username")
+        first_name = cleaned_data.get("first_name")
+        last_name = cleaned_data.get("last_name")
+        email = cleaned_data.get("email")
+        if username is "" and StaffMember.user is "":
             raise ValidationError(_('Choose 1'))
 
+#http://stackoverflow.com/questions/18382796/django-form-save-method
+#http://stackoverflow.com/questions/4269605/django-override-save-for-model
