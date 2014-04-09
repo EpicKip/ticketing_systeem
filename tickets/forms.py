@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class StaffMemberForm(forms.ModelForm):
-    user = forms.ModelChoiceField(User.objects.all(), required=False, label=_('User'))
+    user = forms.ModelChoiceField(User.objects.all(), label=_('User'), required=False)
     username = forms.CharField(label=_('Username'), required=False)
     first_name = forms.CharField(label=_('First name'), required=False)
     last_name = forms.CharField(label=_('Last name'), required=False)
@@ -15,17 +15,19 @@ class StaffMemberForm(forms.ModelForm):
 
     class Meta:
         model = StaffMember
-        fields = ['staff_type']
+        fields = ('staff_type',)
 
     def clean(self):
+        super(StaffMemberForm, self).clean()
         cleaned_data = self.cleaned_data
         username = cleaned_data.get("username")
-        print username + " :D"
         first_name = cleaned_data.get("first_name")
         last_name = cleaned_data.get("last_name")
         email = cleaned_data.get("email")
         user = cleaned_data.get("user")
-
-        if username is u'' and user is u'':
-            raise forms.ValidationError(_('Choose a user from the dropdown or make a new user'))
-        return cleaned_data
+        staff_type = cleaned_data.get("staff_type")
+        check = [username, user]
+        if staff_type:
+            if any(check) and not all(check):
+                return cleaned_data
+        raise forms.ValidationError(_('Choose a user from the dropdown or make a new user'))
