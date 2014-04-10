@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from tickets.models import StaffMember
 from django.utils.translation import ugettext_lazy as _
+import uuid
 
 
 class StaffMemberForm(forms.ModelForm):
@@ -13,11 +14,20 @@ class StaffMemberForm(forms.ModelForm):
     last_name = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('Email'), required=False)
 
+    def passwordRandom(string_length=10):
+        random = str(uuid.uuid4())
+        random = random.upper()
+        random = random.replace("-", "")
+        return random[0:string_length]
+
     class Meta:
         model = StaffMember
         fields = ('staff_type',)
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
+
         super(StaffMemberForm, self).clean()
         cleaned_data = self.cleaned_data
         username = cleaned_data.get("username")
@@ -30,4 +40,31 @@ class StaffMemberForm(forms.ModelForm):
         if staff_type:
             if any(check) and not all(check):
                 return cleaned_data
-        raise forms.ValidationError(_('Choose a user from the dropdown or make a new user'))
+        raise forms.ValidationError(_('Choose a user from the dropdown OR make a new user'))
+
+    def save(self, commit=True):
+        # Run the default save method, commit=False stops the
+        # model saving to the db
+        staff_member = super(StaffMemberForm, self).save(commit=False)
+
+        if self.cleaned_data.get("user") is None:
+            # Create a new User object
+            user = User()
+            user.username = self.cleaned_data['username']
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            user.email = self.cleaned_data['email']
+            user.password = self.passwordRandom(8)
+
+            # Save new user
+            user.save()
+
+            # Apply the new user to the staff_member object
+            staff_member = user
+
+        else:
+            staff_member.user = self.cleaned_data.get("user")
+
+        # If the form was expecting to save the StaffMember then save
+        if commit:
+            staff_member.save()
