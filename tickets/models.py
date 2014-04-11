@@ -126,23 +126,26 @@ class StaffMember(models.Model):
         Staff member class
     """
 
-    user = models.ForeignKey(User, verbose_name=_('user'))
+    user = models.ForeignKey(User, verbose_name=_('user'), blank=True, null=True)
     staff_type = models.CharField(
         max_length=3,
         choices=STAFF_TYPES,
         verbose_name=_('staff type')
     )
 
-    def __unicode__(self):
-        return unicode(self.user.first_name + " " + self.user.last_name)
-
     @property
     def full_name(self):
-        if self.user.first_name or self.user.last_name:
-            full = self.user.first_name + " " + self.user.last_name
-        else:
-            full = "(" + str(self.user) + ")"
+        try:
+            if self.user.first_name or self.user.last_name:
+                full = self.user.first_name + " " + self.user.last_name
+            else:
+                full = "(" + str(self.user) + ")"
+        except Exception:
+            full = "NIKS"
         return unicode(full)
+
+    def __unicode__(self):
+        return self.full_name
 
     class Meta:
         verbose_name = _('staff member')

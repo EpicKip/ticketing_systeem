@@ -14,7 +14,8 @@ class StaffMemberForm(forms.ModelForm):
     last_name = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('Email'), required=False)
 
-    def passwordRandom(string_length=10):
+    @staticmethod
+    def password_random(string_length):
         random = str(uuid.uuid4())
         random = random.upper()
         random = random.replace("-", "")
@@ -49,16 +50,23 @@ class StaffMemberForm(forms.ModelForm):
 
         if self.cleaned_data.get("user") is None:
             # Create a new User object
-            user = User()
-            user.username = self.cleaned_data['username']
-            user.first_name = self.cleaned_data['first_name']
-            user.last_name = self.cleaned_data['last_name']
-            user.email = self.cleaned_data['email']
-            user.password = self.passwordRandom(8)
-
-            # Save new user
+            user = User.objects.create_user(
+                self.cleaned_data['username'],
+                self.cleaned_data['email'],
+                self.password_random(8)
+            )
+            print(self.password_random(7))
+            # user.username = self.cleaned_data['username']
+            # user.first_name = self.cleaned_data['first_name']
+            # user.last_name = self.cleaned_data['last_name']
+            # user.email = self.cleaned_data['email']
+            # user.password = self.password_random(8)
+            #
+            # # Save new user
             user.save()
 
+            print(user.id)
+            assert False
             # Apply the new user to the staff_member object
             staff_member = user
 
@@ -68,3 +76,4 @@ class StaffMemberForm(forms.ModelForm):
         # If the form was expecting to save the StaffMember then save
         if commit:
             staff_member.save()
+        return self
