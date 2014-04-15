@@ -39,13 +39,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'qrcode',
-    'six',
     'tickets',
+    'PIL',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -78,7 +79,7 @@ DATABASES = {
         'NAME': 'ticketing',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD':'',
+        'PASSWORD': '',
     }
 }
 
@@ -101,6 +102,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'http', 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'http', 'static')
 
 # Grappelli admin theme settings
 GRAPPELLI_ADMIN_TITLE = 'TICKET-SYSTEEM.COM - Admin Panel'

@@ -7,6 +7,8 @@ from django.contrib import admin
 from tickets.models import *
 from django.contrib.auth import models
 from forms import *
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
 class CustomerAdmin(admin.ModelAdmin):
     def name(self, obj):
@@ -32,10 +34,16 @@ class StaffMemberAdmin(admin.ModelAdmin):
     def name(self, obj):
         return '<a href="%s"> %s </a>' % (obj.id, obj.full_name)
     name.allow_tags = True
-    list_display = ('name','staff_type',)
-    search_fields = ['id', 'staff_type'#, 'name'
+    list_display = ('name', 'staff_type', 'event',)
+    search_fields = ['id', 'staff_type'
     ]
     form = StaffMemberForm
+
+    def save_model(self, request, obj, form, change):
+        super(StaffMemberAdmin, self).save_model(request, obj, form, change)
+        if obj.the_password:
+            messages.add_message(request, messages.INFO, _('The generated password is: %s') % obj.the_password)
+
 
 class TicketTemplateAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
@@ -46,7 +54,6 @@ class TicketTemplateAdmin(admin.ModelAdmin):
         'grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js',
         'grappelli/tinymce_setup/tinymce_setup.js',
         ]
-
 
 
 class EventTemplateAdmin(admin.ModelAdmin):

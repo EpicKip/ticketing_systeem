@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
-
+import PIL._imaging
 # Create your models here.
 
 STAFF_TYPES = (
@@ -78,6 +78,7 @@ class Event(models.Model):
     maximum = models.IntegerField(verbose_name=_('maximum'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     template = models.ForeignKey('EventTemplate', verbose_name=_('event template'))
+    logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
 
     def clean(self):
         if self.sales_start > self.sales_end:
@@ -127,6 +128,7 @@ class StaffMember(models.Model):
     """
 
     user = models.ForeignKey(User, verbose_name=_('user'), blank=True, null=True)
+    event = models.ForeignKey(Event, verbose_name=_('event'))
     staff_type = models.CharField(
         max_length=3,
         choices=STAFF_TYPES,
@@ -135,13 +137,13 @@ class StaffMember(models.Model):
 
     @property
     def full_name(self):
-        try:
-            if self.user.first_name or self.user.last_name:
-                full = self.user.first_name + " " + self.user.last_name
-            else:
-                full = "(" + str(self.user) + ")"
-        except Exception:
-            full = "NIKS"
+        # try:
+        if self.user.first_name or self.user.last_name:
+            full = self.user.first_name + " " + self.user.last_name
+        else:
+            full = "(" + str(self.user) + ")"
+        # except AttributeError:
+        #     full = "ErrorName"
         return unicode(full)
 
     def __unicode__(self):
