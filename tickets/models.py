@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
-import PIL._imaging
 # Create your models here.
 
 STAFF_TYPES = (
@@ -22,8 +21,16 @@ class Customer(models.Model):
         User,
         verbose_name=_('user'))
 
+    @property
     def full_name(self):
-        return unicode(self.user.first_name + " " + self.user.last_name)
+        # try:
+        if self.user.first_name or self.user.last_name:
+            full = self.user.first_name + " " + self.user.last_name
+        else:
+            full = "(" + str(self.user) + ")"
+        # except AttributeError:
+        #     full = "ErrorName"
+        return unicode(full)
 
     class Meta:
         verbose_name = _('customer')
@@ -31,36 +38,6 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
-class EventTemplate(models.Model):
-    """
-        Template class
-    """
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
-    text = models.TextField(verbose_name=_('Text'))
-
-    class Meta:
-        verbose_name = _('event template')
-        verbose_name_plural = _('event templates')
-
-    def __str__(self):
-        return self.name
-
-
-class TicketTemplate(models.Model):
-    """
-        Template class
-    """
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
-    text = models.TextField(verbose_name=_('Text'))
-
-    class Meta:
-        verbose_name = _('ticket template')
-        verbose_name_plural = _('ticket templates')
-
-    def __str__(self):
-        return self.name
 
 
 class Event(models.Model):
@@ -77,7 +54,6 @@ class Event(models.Model):
     price = models.IntegerField(verbose_name=_('price'))
     maximum = models.IntegerField(verbose_name=_('maximum'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
-    template = models.ForeignKey('EventTemplate', verbose_name=_('event template'))
     logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
 
     def clean(self):
@@ -104,7 +80,7 @@ class Ticket(models.Model):
     ticket_active = models.BooleanField(verbose_name=_('ticket active'))
     customer = models.ForeignKey('Customer', verbose_name=_('customer'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
-    template = models.ForeignKey('TicketTemplate', verbose_name=_('ticket template'))
+    template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/%Y/%m/%d')
 
     def __unicode__(self):
         return unicode(self.id)
@@ -115,10 +91,13 @@ class Ticket(models.Model):
 
     @property
     def full_name(self):
-        if self.customer.user.first_name or self.user.last_name:
-            full = self.customer.user.first_name + " " + self.customer.user.last_name
+        # try:
+        if self.user.first_name or self.user.last_name:
+            full = self.user.first_name + " " + self.user.last_name
         else:
-            full = "(" + str(self.customer.user) + ")"
+            full = "(" + str(self.user) + ")"
+        # except AttributeError:
+        #     full = "ErrorName"
         return unicode(full)
 
 
@@ -137,13 +116,13 @@ class StaffMember(models.Model):
 
     @property
     def full_name(self):
-        # try:
-        if self.user.first_name or self.user.last_name:
-            full = self.user.first_name + " " + self.user.last_name
-        else:
-            full = "(" + str(self.user) + ")"
-        # except AttributeError:
-        #     full = "ErrorName"
+        try:
+            if self.user.first_name or self.user.last_name:
+                full = self.user.first_name + " " + self.user.last_name
+            else:
+                full = "(" + str(self.user) + ")"
+        except AttributeError:
+            full = "ErrorName"
         return unicode(full)
 
     def __unicode__(self):

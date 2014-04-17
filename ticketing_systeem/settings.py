@@ -58,6 +58,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.i18n",
     'django.contrib.messages.context_processors.messages',
+    "django.core.context_processors.static",
 )
 
 GRAPPELLI_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
@@ -104,7 +105,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'http', 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'http', 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'http', 'static')
 
 # Grappelli admin theme settings
 GRAPPELLI_ADMIN_TITLE = 'TICKET-SYSTEEM.COM - Admin Panel'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'http', 'static', 'ticketing'),
+    os.path.join(BASE_DIR, 'http', 'static'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+)

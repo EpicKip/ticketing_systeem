@@ -8,7 +8,6 @@ To activate your index dashboard add the following to your settings.py::
 
 from django.utils.translation import ugettext_lazy as _
 from grappelli.dashboard import modules, Dashboard
-from grappelli.dashboard.utils import get_admin_site_name
 
 
 class CustomIndexDashboard(Dashboard):
@@ -17,30 +16,28 @@ class CustomIndexDashboard(Dashboard):
     """
     
     def init_with_context(self, context):
-        site_name = get_admin_site_name(context)
-
         # append an app list module for "Ticketing"
         self.children.append(modules.ModelList(
             _('Ticketing'),
             collapsible=True,
             column=1,
-            css_classes=('collapse closed',),
-            exclude=('django.contrib.*',),
+            exclude=('django.contrib.*', 'tickets.models.Customer'),
             models=('tickets.models.*',),
         ))
-        
+
         # append an app list module for "Administration"
         self.children.append(modules.ModelList(
             _('Users'),
             column=1,
-            collapsible=False,
-            models=('django.contrib.auth.models.User',),
+            collapsible=True,
+            css_classes=('grp-closed',),
+            models=('django.contrib.auth.models.User', 'tickets.models.Customer'),
         ))
 
         # append a recent actions module
         self.children.append(modules.RecentActions(
             _('Recent changes'),
             limit=5,
-            collapsible=True,
+            collapsible=False,
             column=3,
         ))
