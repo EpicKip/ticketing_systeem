@@ -4,6 +4,37 @@
    Author's custom styles
    ========================================================================== */
 
+#Order{
+    width: 100%;
+    height: auto;
+    font-size: 15px;
+    text-align: center;
+}
+
+#Order form {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#Order label, input {
+    /* in order to define widths */
+    display: inline-block;
+}
+
+#Order label {
+    width: 30%;
+    /* positions the label text beside the input */
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+#Order label + input {
+    width: 25%;
+    /* large margin-right to force the next element to the new-line
+       and margin-left to create a gutter between the label and input */
+    margin: 0 30% 0 4%;
+}
+
 
 
 
