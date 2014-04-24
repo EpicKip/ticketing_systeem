@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'(?P<event_id>\d+)/step2/$', 'tickets.views.step2', name='step2'),
     url(r'(?P<event_id>\d+)/step3/$', 'tickets.views.step3', name='step3'),
     url(r'(?P<event_id>\d+)/step4/$', 'tickets.views.step4', name='step4'),
-    url(r'^$', 'tickets.views.login_view', name='login'),
-    url(r'^$', 'tickets.views.logout_view', name='logout'),
+    url(r'^$', 'tickets.views.login', name='login'),
+    url(r'^$', 'django.contrib.auth.views.logout', name='logout'),
 ]
