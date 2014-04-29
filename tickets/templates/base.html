@@ -46,10 +46,12 @@
           </form>
         </div>
             {% elif user.is_authenticated %}
+             <div class="navbar-collapse collapse">
             <form class="navbar-form navbar-right" method="post" action="{% url 'logout' %}?next={{request.path}}">
             {% csrf_token %}
             <button type="submit" value="Logout" class="btn btn-success">Sign out</button>
             </form>
+            </div>
         {% endif %}
         <!--/.navbar-collapse -->
     </div>

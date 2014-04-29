@@ -71,7 +71,7 @@ def step2(request, event_id):
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'index.html', {'event': event})
+    return render(request, 'indasddex.html', {'event': event})
 
 
 def step3(request, event_id):
