@@ -24,33 +24,38 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Event: {{ event.name }} {% if user.is_authenticated %} User: {{ user.username }}{% endif %}</a>
-        </div>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <a class="navbar-brand" href="#">{% if event %} {{ event.name }} Ticketing{% endif %}
+
+            {% if event and user.is_authenticated %} - {% endif %} {% if user.is_authenticated %}User:
+                {{ user.username }}{% endif %}</a>
+                </div>
         {% if not user.is_authenticated %}
-        <div class="navbar-collapse collapse">
-          <form id="login_form" class="navbar-form navbar-right" method="post" action="{% url 'login' %}">
-              {% csrf_token %}
-            <div class="form-group">
-              <input type="text" placeholder="Username" name="username" id="id_username" class="form-control">
+            <div class="navbar-collapse collapse">
+                <form id="login_form" class="navbar-form navbar-right" method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" placeholder="Username" name="username" id="id_username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" name="password" id="id_password"
+                               class="form-control">
+                    </div>
+                    <button type="submit" value="submit" class="btn btn-success">Sign in</button>
+                </form>
             </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" name="password" id="id_password" class="form-control">
-            </div>
-            <button type="submit" value="submit" class="btn btn-success">Sign in</button>
-          </form>
-        </div>
-            {% elif user.is_authenticated %}
-             <div class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" method="post" action="{% url 'logout' %}?next={{request.path}}">
-            {% csrf_token %}
-            <button type="submit" value="Logout" class="btn btn-success">Sign out</button>
-            </form>
+        {% elif user.is_authenticated %}
+            <div class="navbar-collapse collapse">
+                <form class="navbar-form navbar-right" method="post"
+                      action="{% url 'logout' %}?next={{ request.path }}">
+                    {% csrf_token %}
+                    <button type="submit" value="Logout" class="btn btn-success">Sign out</button>
+                </form>
             </div>
         {% endif %}
         <!--/.navbar-collapse -->
@@ -59,7 +64,7 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
-        <h2>{{ event.name }} ticketing</h2>
+        <h2>{% block heading %}{% if event.logo %}<img src="/media/{{ event.logo }}">{% endif %}{{ event.name }} ticketing {% endblock %}</h2>
     </div>
 </div>
 <div class="container">
@@ -68,7 +73,7 @@
     {% endblock %}
     <hr>
     <footer>
-        <p>&copy; {{ event.name }}</p>
+        <p>&copy; NationEvents - {% now "Y" %} </p>
     </footer>
 </div>
 <!-- /container -->

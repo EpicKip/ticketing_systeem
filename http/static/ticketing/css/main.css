@@ -5,8 +5,7 @@
    ========================================================================== */
 
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+
 }
 #Order{
     width: 100%;
@@ -37,12 +36,24 @@ body {
     margin: 0 30% 0 4%;
 }
 .center{
-   align-content: center;
-
+   text-align: center;
 }
 
-
-
+.errormsg{
+    text-align: center;
+    color: red;
+}
+#Login input{
+    width: 35%;
+    margin: 0 0% 0 35%;
+    text-align: center;
+}
+#Login form{
+    width: 80%;
+}
+.margin{
+    margin-left: 5%;
+}
 
 
 

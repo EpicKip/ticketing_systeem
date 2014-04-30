@@ -42,7 +42,12 @@ class StaffMemberAdmin(admin.ModelAdmin):
             messages.add_message(request, messages.INFO, _('The generated password is: %s') % obj.the_password)
 
 
+class EventTicketAdmin(admin.ModelAdmin):
+    list_display = ('name', 'event')
+
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(StaffMember, StaffMemberAdmin)
+admin.site.register(EventTicket, EventTicketAdmin)

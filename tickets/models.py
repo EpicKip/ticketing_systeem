@@ -51,8 +51,6 @@ class Event(models.Model):
     sales_start = models.DateField(verbose_name=_('sales start'))
     sales_end = models.DateField(verbose_name=_('sales end'))
     event_active = models.BooleanField(verbose_name=_('event active'))
-    price = models.IntegerField(verbose_name=_('price'))
-    maximum = models.IntegerField(verbose_name=_('maximum'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
 
@@ -70,6 +68,17 @@ class Event(models.Model):
     class Meta:
         verbose_name = _('event')
         verbose_name_plural = _('events')
+
+
+class EventTicket(models.Model):
+    """
+        Event ticket class (different kind of tickets per event)
+    """
+    name = models.CharField(max_length=100, verbose_name=_('name'))
+    event = models.ForeignKey('Event', verbose_name=_('event'))
+    price = models.IntegerField(verbose_name=_('price'))
+    maximum = models.IntegerField(verbose_name=_('maximum'))
+    info = models.CharField(max_length=500, verbose_name=_('information'))
 
 
 class Ticket(models.Model):

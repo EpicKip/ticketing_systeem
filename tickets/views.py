@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
@@ -28,34 +29,33 @@ def user_login(request):
         user = authenticate(username=username, password=password)
 
         # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
+        # If None, no user with matching credentials was found.
         if user is not None:
-            # Is the account active? It could have been disabled.
+            # Is the account active?
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
+                # We'll send the user back to the event page.
                 login(request, user)
-                return HttpResponse("Logged in! Just press back for the time being.. Im gonna fix it soon")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your ticketing account is disabled.")
+                return render_to_response('login.html', {'errormsg': "Your account has been disabled, contact an admin"
+                                                                     "istrator for more info"},
+                                          context_instance=RequestContext(request))
         else:
             # Bad login details were provided. So we can't log the user in.
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            return render_to_response('login.html', {'errormsg': "Username or password wrong, please try again or"
+                                                                 " use the forgot option"},
+                                      context_instance=RequestContext(request))
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
     else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        pass
+        # If the user goes to accounts/login show him the login page
+        return render_to_response('login.html', context_instance=RequestContext(request))
 
 
 def user_logout(request):
     logout(request)
-    return HttpResponse("Logged out! Just press back for the time being.. Im gonna fix it soon")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def show_event(request, event_id):
@@ -65,13 +65,13 @@ def show_event(request, event_id):
         event = Event.objects.get(id=1)
     return render(request, 'index.html', {'event': event})
 
-
+@login_required
 def step2(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'indasddex.html', {'event': event})
+    return render(request, 'step2.html', {'event': event})
 
 
 def step3(request, event_id):

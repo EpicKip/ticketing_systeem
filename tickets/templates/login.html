@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block heading %}Login page{% endblock %}
+{% block body %}
+<style>form{text-align: center}</style>
+          <div id="Login">
+              {% if errormsg %}
+        <form class="has-error">
+
+<span class="control-label">{{ errormsg }}</span>
+            <br />
+                  {% else %}
+                  <form>
+            {% endif %}
+            <input name=_("Username"), id="username" class="form-control center" placeholder="Username">
+            <br />
+            <input name=_("Password") id="password" type="password" class="form-control center" placeholder="Password">
+            <br />
+            <div class="btn-group btn-group-sm margin">
+            <a class="center btn btn-default">Login</a>
+            <a class="center btn btn-default">Register</a>
+            <div class="btn-group"></div>
+                <button type="button" class="center btn btn-default dropdown-toggle" data-toggle="dropdown">Forgot
+                    <span class="caret"></span>
+                </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">Forgot password</a> </li>
+        <li><a href="#">Forgot username</a> </li>
+    </ul>
+            </div>
+
+</form>
+</div>
+
+
+{% endblock %}
