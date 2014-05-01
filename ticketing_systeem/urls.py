@@ -15,5 +15,11 @@ urlpatterns = patterns('',
 
     url(r'^events/', include('tickets.urls')),
 
+    # login page
     url(r'^accounts/login/$', 'tickets.views.user_login', name='login'),
+
+    # register page
+    url(r'^accounts/register/$', 'tickets.views.register', name='register')
+
+
 ) + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -43,16 +43,16 @@ body {
     text-align: center;
     color: red;
 }
-#Login input{
+.Login-input{
     width: 35%;
-    margin: 0 0% 0 35%;
+    margin: 0 0% 0 40%;
     text-align: center;
 }
-#Login form{
+.Login-form{
     width: 80%;
 }
 .margin{
-    margin-left: 5%;
+    margin-left: 15%;
 }
 
 

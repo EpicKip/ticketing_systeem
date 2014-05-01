@@ -50,7 +50,10 @@ def user_login(request):
 
     else:
         # If the user goes to accounts/login show him the login page
-        return render_to_response('login.html', context_instance=RequestContext(request))
+        if request.user.is_authenticated():
+            return render_to_response('profile.html', context_instance=RequestContext(request))
+        else:
+            return render_to_response('login.html', context_instance=RequestContext(request))
 
 
 def user_logout(request):
@@ -65,6 +68,7 @@ def show_event(request, event_id):
         event = Event.objects.get(id=1)
     return render(request, 'index.html', {'event': event})
 
+
 @login_required
 def step2(request, event_id):
     try:
@@ -74,20 +78,22 @@ def step2(request, event_id):
     return render(request, 'step2.html', {'event': event})
 
 
+@login_required
 def step3(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'index.html', {'event': event})
+    return render(request, 'step3.html', {'event': event})
 
 
+@login_required
 def step4(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'index.html', {'event': event})
+    return render(request, 'step4.html', {'event': event})
 
 
 def view_cart(request):
@@ -100,3 +106,10 @@ def add_to_cart(request, item_id, quantity):
     cart[item_id] = quantity
     request.session['cart'] = cart
     # rest of the view
+
+
+def register(request):
+    if request.user.is_authenticated():
+        return render_to_response('profile.html', context_instance=RequestContext(request))
+    else:
+        return render(request, 'register.html')
