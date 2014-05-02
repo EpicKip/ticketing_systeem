@@ -76,7 +76,7 @@ class EventTicket(models.Model):
     """
     name = models.CharField(max_length=100, verbose_name=_('name'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
-    price = models.IntegerField(verbose_name=_('price'))
+    price = models.FloatField(verbose_name=_('price'))
     maximum = models.IntegerField(verbose_name=_('maximum'))
     info = models.CharField(max_length=500, verbose_name=_('information'))
 

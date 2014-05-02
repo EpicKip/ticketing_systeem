@@ -1,11 +1,9 @@
-from datetime import datetime, date
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
-from tickets.models import Event
+from tickets.models import Event, EventTicket
 
 
 def index(request):
@@ -66,7 +64,7 @@ def show_event(request, event_id):
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'index.html', {'event': event})
+    return render(request, 'index.html', {'event': event, 'eventticket': EventTicket})
 
 
 @login_required

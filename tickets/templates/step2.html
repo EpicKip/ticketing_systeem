@@ -1,4 +1,24 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block body %}
-    Step 2
+
+      <div id="Order">
+        <form>
+            <label for="username">Username:</label>
+            <input name=_("Username"), id="username">
+            <br />
+            <label for="first_name">First name:</label>
+            <input name=_("First_name"), id="first_name">
+            <br />
+            <label for="last_name">Last name:</label>
+            <input name=_("Last_name"), id="last_name">
+            <br />
+            <label for="email">Email:</label>
+            <input name=_("Email"), id="email">
+            <br />
+            <div class="center margin_terms">Do you agree to the <a href="#">tems and conditions</a><br />
+            <input type="radio" name="terms" value="Yes">Yes<br>
+            <input type="radio" name="terms" value="No">No<br>
+            <a href="/events/{{ event.id }}/step2" class="center btn btn-primary btn-lg btn_register">Register</a></div>
+        </form>
+      </div>
 {% endblock %}

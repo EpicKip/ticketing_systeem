@@ -9,12 +9,13 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{% block title %}Ticketing!{% endblock %}</title>
+    <title>{% block title %}tickets | {{ event.name }}{% endblock %}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static "ticketing/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "ticketing/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "ticketing/css/main.css" %}">
+    <link rel="SHORTCUT ICON" href="/media/{{ event.logo }}" type="image/x-icon">
     <script src="{% static "ticketing/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js" %} "></script>
 </head>
 <body>
@@ -64,7 +65,7 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
-        <h2>{% block heading %}{% if event.logo %}<img class="img-circle img-thumbnail" src="/media/{{ event.logo }}">{% endif %}{{ event.name }} ticketing {% endblock %}</h2>
+        <h2>{% block heading %}{% if event.logo %}<img class="img-circle img-thumbnail img_resize" src="/media/{{ event.logo }}">{% endif %}{{ event.name }} ticketing {% endblock %}</h2>
     </div>
 </div>
 <div class="container">
