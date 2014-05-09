@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
@@ -9,6 +10,18 @@ from tickets.models import Event, EventTicket
 def index(request):
     events = Event.objects.all()
     return render_to_response('base.html', {'events': events}, context_instance=RequestContext(request))
+
+
+class TicketSelectionForm(forms.Form):
+    ticket = forms.ModelChoiceField(queryset=EventTicket.objects.all())
+
+
+def __init__(self, *args, **kwargs):
+    event = kwargs.pop('event', None)
+    super(TicketSelectionForm, self).__init__(*args, **kwargs)
+
+    if event is not None:
+        self.fields['ticket'].queryset = EventTicket.objects.filter(event=event)
 
 
 def user_login(request):
@@ -111,3 +124,5 @@ def register(request):
         return render_to_response('profile.html', context_instance=RequestContext(request))
     else:
         return render(request, 'register.html')
+
+

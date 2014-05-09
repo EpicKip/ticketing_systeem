@@ -7,7 +7,7 @@ from django.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # grappelli URLS
+    #grappelli URLS
     url(r'^grappelli/', include('grappelli.urls')),
 
     # admin site URLS
