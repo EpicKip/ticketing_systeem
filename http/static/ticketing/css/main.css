@@ -1,5 +1,3 @@
-
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
@@ -7,11 +5,13 @@
 body {
 
 }
-#Order{
+
+#Order {
     width: 100%;
     height: auto;
     font-size: 15px;
 }
+
 #Order form {
     width: 80%;
     margin: 0 auto;
@@ -35,69 +35,79 @@ body {
        and margin-left to create a gutter between the label and input */
     margin: 0 30% 0 4%;
 }
-.center{
-   text-align: center;
+
+.center {
+    text-align: center;
 }
 
-.errormsg{
+.errormsg {
     text-align: center;
     color: red;
 }
-.Login-input{
+
+.Login-input {
     width: 35%;
     margin: 0 0 0 40%;
     text-align: center;
 }
-.Login-form{
+
+.Login-form {
     width: 80%;
 }
-.margin{
+
+.margin {
     margin-left: 15%;
 }
 
-.margin_terms{
+.margin_terms {
     margin-right: 10%;
 }
 
-.img_resize{
+.img_resize {
     max-width: 15%;
 
 }
-.step{
-border-bottom: 1px solid #ccc;
-clear: both;
+
+.step {
+    border-bottom: 1px solid #ccc;
+    clear: both;
     float: left;
-margin: 12.5px 0;
-padding: 12.5px 0;
-width: 100%;
+    margin: 12.5px 0;
+    padding: 12.5px 0;
+    width: 100%;
 }
-.step-active{
-text-decoration: none;
-opacity: 1;
+
+.step-active {
+    text-decoration: none;
+    opacity: 1;
     float: left;
-display: block;
-width: 24%;
-text-align: center;
-border-right: 2px dotted #ccc;
+    display: block;
+    width: 24%;
+    text-align: center;
+    border-right: 2px dotted #ccc;
 }
-.step-div{
-float: left;
-display: block;
-width: 24%;
-text-align: center;
-border-right: 2px dotted #ccc;
-        opacity: 0.3;
+
+.step-div {
+    float: left;
+    display: block;
+    width: 24%;
+    text-align: center;
+    border-right: 2px dotted #ccc;
+    opacity: 0.6;
 }
-.step-top{
-font-family: sans-serif;
-font-size: 37px;
-line-height: 39px;
+
+.step-top {
+    font-family: sans-serif;
+    font-size: 37px;
+    line-height: 39px;
 }
-.step-description{
+
+.step-description {
 
 }
-.step-last{
-   border-right: none;
+
+.step-last {
+    border-right: none;
 }
 
 
