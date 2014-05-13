@@ -63,10 +63,42 @@ body {
     max-width: 15%;
 
 }
+.step{
+border-bottom: 1px solid #ccc;
+clear: both;
+    float: left;
+margin: 12.5px 0;
+padding: 12.5px 0;
+width: 100%;
+}
+.step-active{
+text-decoration: none;
+opacity: 1;
+    float: left;
+display: block;
+width: 24%;
+text-align: center;
+border-right: 2px dotted #ccc;
+}
+.step-div{
+float: left;
+display: block;
+width: 24%;
+text-align: center;
+border-right: 2px dotted #ccc;
+        opacity: 0.3;
+}
+.step-top{
+font-family: sans-serif;
+font-size: 37px;
+line-height: 39px;
+}
+.step-description{
 
-
-
-
+}
+.step-last{
+   border-right: none;
+}
 
 
 

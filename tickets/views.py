@@ -80,7 +80,14 @@ def show_event(request, event_id):
     return render(request, 'index.html', {'event': event, 'eventticket': EventTicket})
 
 
-@login_required
+def step1(request, event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+    except Event.DoesNotExist:
+        event = Event.objects.get(id=1)
+    return render(request, 'step1.html', {'event': event})
+
+
 def step2(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
