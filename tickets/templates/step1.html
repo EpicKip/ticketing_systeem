@@ -1,22 +1,70 @@
 {% extends 'base.html' %}
 {% block body %}
     <div class="step">
-<div class="step-active">
-        <div class="step-top">Step 1</div>
-        <div class="step-description">Tickets</div>
-    </div>
-    <div class="step-div">
-        <div class="step-top">Step 2</div>
-        <div class="step-description">Gebruiker</div>
-    </div>
-    <div class="step-div">
-        <div class="step-top">Step 3</div>
-        <div class="step-description">Betaling</div>
-    </div>
-    <div class="step-div step-last">
-        <div class="step-top">Step 4</div>
-        <div class="step-description">Download</div>
-    </div>
+        <div class="step-active">
+            <div class="step-top">Step 1</div>
+            <div class="step-description">Tickets</div>
         </div>
-<hr>
+        <div class="step-div">
+            <div class="step-top">Step 2</div>
+            <div class="step-description">Gebruiker</div>
+        </div>
+        <div class="step-div">
+            <div class="step-top">Step 3</div>
+            <div class="step-description">Betaling</div>
+        </div>
+        <div class="step-div step-last">
+            <div class="step-top">Step 4</div>
+            <div class="step-description">Download</div>
+        </div>
+    </div>
+    <hr>
+
+    <form name="tickets" method="post" action="{% url 'set_items' %}">
+    {% csrf_token %}
+        <table>
+            {% for eventticket in eventtickets %}
+                <tr class="tr" style="background:{% cycle '#CCCC' '#c8c8c8' %}">
+                    <td>
+                        Aantal: <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
+                                       class="input_small" type="text" value="0"/>
+                    </td>
+                    <td class="td">
+                        {{ eventticket.name }}
+                    </td>
+                    <td>
+                        €{{ eventticket.price|floatformat:-2 }}&nbsp;
+                    </td>
+                    <td><span id="subtotal-{{ eventticket.id }}"></span></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3">
+                    Totaal:
+                </td>
+                <td>
+                    <span id="total"></span>
+                </td>
+            </tr>
+
+        </table>
+<button class="btn centerMargin">Volgende</button>
+    </form>
+    <script type="text/javascript">
+        $('.input_small').on("change", function (event) {
+            console.log(event);
+            var input = $(event.target);
+            var value = event.target.value;
+            var id = event.target.id;
+            $('#subtotal-' + id).html('€ ' + parseFloat(input.data('price').replace(',', '.')) * parseInt(value));
+            var total = 0;
+            $('.input_small').each(function (index, input) {
+                var input2 = $(input);
+                var value = input.value;
+                console.log(input2.data('price'))
+                total += parseFloat(input2.data('price').replace(',', '.')) * parseInt(value);
+            })
+            $('#total').html('€ ' + total);
+        })
+    </script>
 {% endblock %}

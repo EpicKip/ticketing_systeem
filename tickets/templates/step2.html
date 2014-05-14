@@ -19,24 +19,22 @@
     </div>
         </div>
 <hr>
-      <div id="Order">
-        <form>
-            <label for="username">Username:</label>
-            <input name=_("Username"), id="username">
-            <br />
-            <label for="first_name">First name:</label>
-            <input name=_("First_name"), id="first_name">
-            <br />
-            <label for="last_name">Last name:</label>
-            <input name=_("Last_name"), id="last_name">
-            <br />
-            <label for="email">Email:</label>
-            <input name=_("Email"), id="email">
-            <br />
-            <div class="center margin_terms">Do you agree to the <a href="#">tems and conditions</a><br />
-            <input type="radio" name="terms" value="Yes">Yes<br>
-            <input type="radio" name="terms" value="No">No<br>
-            <a href="/events/{{ event.id }}/step2" class="center btn btn-primary btn-lg btn_register">Register</a></div>
+
+    <div id="Order">
+        <form method="post" action="{% url 'test' %}">
+            {% csrf_token %} <label class="Order-label" for="email">Email: </label>
+            <input name="Email" id="email"><br/>
+
+            <div class="center margin_terms">Do you agree to the <a href="#">tems and conditions</a><br/>
+                <label for="Yes">Yes
+                    <input type="radio" name="terms" value="Yes">
+                </label><br><label for="No">No
+                    <input type="radio" name="terms" value="No"></label><br/>
+                <button type="submit" class="center btn btn-primary btn-lg btn_register">Next</button>
+            </div>
         </form>
-      </div>
+    </div>
+    {% for item in cart %}
+        {{ item.value }}
+    {% endfor %}
 {% endblock %}

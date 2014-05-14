@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^(?P<event_id>\d+)/step3/$', 'tickets.views.step3', name='step3'),
     url(r'^(?P<event_id>\d+)/step4/$', 'tickets.views.step4', name='step4'),
     url(r'^logout/$', 'tickets.views.user_logout', name='logout'),
+    url(r'^midstep/$', 'tickets.views.mid_step', name='midstep'),
+    url(r'^setItems/$', 'tickets.views.set_itmes', name='set_items'),
+    url(r'^test/$', 'tickets.views.test', name='test')
 ]

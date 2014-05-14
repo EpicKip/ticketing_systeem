@@ -22,7 +22,7 @@ body {
     display: inline-block;
 }
 
-#Order label {
+.Order-label {
     width: 30%;
     /* positions the label text beside the input */
     text-align: right;
@@ -72,8 +72,8 @@ body {
     border-bottom: 1px solid #ccc;
     clear: both;
     float: left;
-    margin: 12.5px 0;
-    padding: 12.5px 0;
+    margin: 13px 0;
+    padding: 13px 0;
     width: 100%;
 }
 
@@ -110,7 +110,29 @@ body {
     border-right: none;
 }
 
+.td{
+    /*width: 200px;*/
+    padding: 0 5px 0 5px;
+}
+.tr{
+    margin: 3px 3px 3px 3px;
+    width: 300px;
+    height: auto;
+}
 
+.input_small{
+    width: 25px;
+}
+
+table{
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centerMargin{
+    margin-left: 40%;
+}
 
 
 
