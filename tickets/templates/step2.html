@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tickets_filters %}
 {% block body %}
     <div class="step">
 <div class="step-div">
@@ -34,7 +35,15 @@
             </div>
         </form>
     </div>
+    <table>
+    <tr><td>Product:</td><td>aantal:</td><td>Prijs:</td></tr>
     {% for item in cart %}
-        {{ item.value }}
+        <tr style="background:{% cycle '#CCCC' '#c8c8c8' %}">
+            <td>{% get_ticket_from_session_name item  %}</td>
+            <td>{{ cart|get_item:item }}</td>
+            <td></td>
+        </tr>
     {% endfor %}
+    <tr><td colspan="2">Totaal:</td><td></td></tr>
+    </table>
 {% endblock %}

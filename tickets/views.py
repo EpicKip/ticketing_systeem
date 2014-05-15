@@ -85,8 +85,8 @@ def step2(request, event_id):
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
         eventtickets = EventTicket.objects.filter(event_id=1)
-    new_dict = {eventtickets.id: request.session.get('cart')[eventtickets.id] for eventtickets in eventtickets}
-    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': new_dict})
+    del request.session['cart']['csrfmiddlewaretoken']
+    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart')})
 
 
 @login_required
@@ -138,5 +138,6 @@ def set_itmes(request):
 
 
 def test(request):
+    del request.session['cart']['csrfmiddlewaretoken']
     print(request.session.get('cart'))
     return HttpResponse("derp")

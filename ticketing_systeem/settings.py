@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'qrcode',
     'tickets',
     'PIL',
+    'tickets.templatetags',
 )
 
 MIDDLEWARE_CLASSES = (
