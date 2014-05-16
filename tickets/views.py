@@ -85,12 +85,13 @@ def step2(request, event_id):
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
         eventtickets = EventTicket.objects.filter(event_id=1)
+    request.session['cart'] = request.POST
     del request.session['cart']['csrfmiddlewaretoken']
     return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart')})
 
 
 @login_required
-def step3(request, event_id):
+def step3_login(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
@@ -124,7 +125,7 @@ def register(request):
         return render(request, 'register.html')
 
 
-def mid_step(request):
+def mid_step(request, event_id):
     if request.method == 'POST':
         if request.POST['Email'] is '':
             return render_to_response('mid-step.html', context_instance=RequestContext(request))
@@ -132,9 +133,13 @@ def mid_step(request):
             return HttpResponseRedirect(request.get_full_path())
 
 
-def set_itmes(request):
+def set_itmes(request, event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+    except Event.DoesNotExist:
+        event = Event.objects.get(id=1)
     request.session['cart'] = request.POST
-    return render_to_response('step2.html', context_instance=RequestContext(request))
+    return render_to_response('step2.html', {'event': event}, context_instance=RequestContext(request))
 
 
 def test(request):

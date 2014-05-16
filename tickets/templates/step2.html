@@ -2,26 +2,27 @@
 {% load tickets_filters %}
 {% block body %}
     <div class="step">
-<div class="step-div">
-        <div class="step-top">Step 1</div>
-        <div class="step-description">Tickets</div>
-    </div>
-    <div class="step-active">
-        <div class="step-top">Step 2</div>
-        <div class="step-description">Gebruiker</div>
-    </div>
-    <div class="step-div">
-        <div class="step-top">Step 3</div>
-        <div class="step-description">Betaling</div>
-    </div>
-    <div class="step-div step-last">
-        <div class="step-top">Step 4</div>
-        <div class="step-description">Download</div>
-    </div>
+        <div class="step-div">
+            <div class="step-top">Step 1</div>
+            <div class="step-description">Tickets</div>
         </div>
-<hr>
+        <div class="step-active">
+            <div class="step-top">Step 2</div>
+            <div class="step-description">Gebruiker</div>
+        </div>
+        <div class="step-div">
+            <div class="step-top">Step 3</div>
+            <div class="step-description">Betaling</div>
+        </div>
+        <div class="step-div step-last">
+            <div class="step-top">Step 4</div>
+            <div class="step-description">Download</div>
+        </div>
+    </div>
+    <hr>
 
     <div id="Order">
+    *Vul geen email adres in als u al ingelogd bent
         <form method="post" action="{% url 'test' %}">
             {% csrf_token %} <label class="Order-label" for="email">Email: </label>
             <input name="Email" id="email"><br/>
@@ -36,14 +37,36 @@
         </form>
     </div>
     <table>
-    <tr><td>Product:</td><td>aantal:</td><td>Prijs:</td></tr>
-    {% for item in cart %}
-        <tr style="background:{% cycle '#CCCC' '#c8c8c8' %}">
-            <td>{% get_ticket_from_session_name item  %}</td>
-            <td>{{ cart|get_item:item }}</td>
+        <tr>
+            <td>Product:</td>
+            <td>aantal:</td>
+            <td>Prijs:</td>
+        </tr>
+        {% for item in cart %}
+            <tr style="background:{% cycle '#CCCC' '#c8c8c8' %}">
+                <td id="item">{% get_ticket_from_session_name item %}</td>
+                <td>{{ cart|get_item:item }}</td>
+                <td><span id="sub_total"></span></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2">Totaal:</td>
             <td></td>
         </tr>
-    {% endfor %}
-    <tr><td colspan="2">Totaal:</td><td></td></tr>
     </table>
+
+    <script type="text/javascript">
+        $('.sub_total')(function (event) {
+            var total = 0;
+            var input = event.data;
+            $('#subtotal-' + id).html('€ ' + parseFloat(input.data('price').replace(',', '.')) * parseInt(value));
+            $('.input_small').each(function (index, input) {
+                var input2 = $(input);
+                var value = input.value;
+                console.log(input2.data('price'))
+                total += parseFloat(input2.data('price').replace(',', '.')) * parseInt(value);
+            })
+            $('#total').html('€ ' + total);
+        })
+    </script>
 {% endblock %}
