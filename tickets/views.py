@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.contrib.redirects.models import Redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from tickets.models import Event, EventTicket
-
+from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 
 def index(request):
     events = Event.objects.all()
@@ -85,9 +87,16 @@ def step2(request, event_id):
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
         eventtickets = EventTicket.objects.filter(event_id=1)
-    request.session['cart'] = request.POST
     del request.session['cart']['csrfmiddlewaretoken']
-    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart')})
+    subtotal = {}
+    total = 0
+    for eventticket in eventtickets:
+        number1 = request.session['cart'][str(eventticket.id)]
+        number2 = EventTicket.objects.get(id=eventticket.id).price
+        total += float(number1) * float(number2)
+        subtotal[str(eventticket.id)] = (float(number1) * float(number2))
+
+    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
 
 
 @login_required
@@ -108,16 +117,6 @@ def step4(request, event_id):
     return render(request, 'step4.html', {'event': event})
 
 
-def view_cart(request):
-    cart = request.session.get('cart', {})
-
-
-def add_to_cart(request, item_id, quantity):
-    cart = request.session.get('cart', {})
-    cart[item_id] = quantity
-    request.session['cart'] = cart
-
-
 def register(request):
     if request.user.is_authenticated():
         return render_to_response('profile.html', context_instance=RequestContext(request))
@@ -125,24 +124,17 @@ def register(request):
         return render(request, 'register.html')
 
 
-def mid_step(request, event_id):
-    if request.method == 'POST':
-        if request.POST['Email'] is '':
-            return render_to_response('mid-step.html', context_instance=RequestContext(request))
-        else:
-            return HttpResponseRedirect(request.get_full_path())
-
-
-def set_itmes(request, event_id):
+def set_items(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
     request.session['cart'] = request.POST
-    return render_to_response('step2.html', {'event': event}, context_instance=RequestContext(request))
+    return HttpResponseRedirect(reverse('tickets.views.step2', args=(event_id,)))
 
 
 def test(request):
-    del request.session['cart']['csrfmiddlewaretoken']
+    # send_mail('Subject here', 'Here is the message.', 'from@example.com',
+    # ['to@example.com'], fail_silently=False)
     print(request.session.get('cart'))
     return HttpResponse("derp")

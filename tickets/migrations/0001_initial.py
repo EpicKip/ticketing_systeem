@@ -15,22 +15,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'tickets', ['Customer'])
 
-        # Adding model 'EventTemplate'
-        db.create_table(u'tickets_eventtemplate', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal(u'tickets', ['EventTemplate'])
-
-        # Adding model 'TicketTemplate'
-        db.create_table(u'tickets_tickettemplate', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal(u'tickets', ['TicketTemplate'])
-
         # Adding model 'Event'
         db.create_table(u'tickets_event', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -41,12 +25,21 @@ class Migration(SchemaMigration):
             ('sales_start', self.gf('django.db.models.fields.DateField')()),
             ('sales_end', self.gf('django.db.models.fields.DateField')()),
             ('event_active', self.gf('django.db.models.fields.BooleanField')()),
-            ('price', self.gf('django.db.models.fields.IntegerField')()),
-            ('maximum', self.gf('django.db.models.fields.IntegerField')()),
             ('information', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('template', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.EventTemplate'])),
+            ('logo', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
         db.send_create_signal(u'tickets', ['Event'])
+
+        # Adding model 'EventTicket'
+        db.create_table(u'tickets_eventticket', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('event', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.Event'])),
+            ('price', self.gf('django.db.models.fields.FloatField')()),
+            ('maximum', self.gf('django.db.models.fields.IntegerField')()),
+            ('info', self.gf('django.db.models.fields.CharField')(max_length=500)),
+        ))
+        db.send_create_signal(u'tickets', ['EventTicket'])
 
         # Adding model 'Ticket'
         db.create_table(u'tickets_ticket', (
@@ -54,14 +47,15 @@ class Migration(SchemaMigration):
             ('ticket_active', self.gf('django.db.models.fields.BooleanField')()),
             ('customer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.Customer'])),
             ('event', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.Event'])),
-            ('template', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.TicketTemplate'])),
+            ('template', self.gf('django.db.models.fields.files.FileField')(max_length=100, blank=True)),
         ))
         db.send_create_signal(u'tickets', ['Ticket'])
 
         # Adding model 'StaffMember'
         db.create_table(u'tickets_staffmember', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+            ('event', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tickets.Event'])),
             ('staff_type', self.gf('django.db.models.fields.CharField')(max_length=3)),
         ))
         db.send_create_signal(u'tickets', ['StaffMember'])
@@ -71,14 +65,11 @@ class Migration(SchemaMigration):
         # Deleting model 'Customer'
         db.delete_table(u'tickets_customer')
 
-        # Deleting model 'EventTemplate'
-        db.delete_table(u'tickets_eventtemplate')
-
-        # Deleting model 'TicketTemplate'
-        db.delete_table(u'tickets_tickettemplate')
-
         # Deleting model 'Event'
         db.delete_table(u'tickets_event')
+
+        # Deleting model 'EventTicket'
+        db.delete_table(u'tickets_eventticket')
 
         # Deleting model 'Ticket'
         db.delete_table(u'tickets_ticket')
@@ -136,39 +127,35 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'information': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'maximum': ('django.db.models.fields.IntegerField', [], {}),
+            'logo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'price': ('django.db.models.fields.IntegerField', [], {}),
             'sales_end': ('django.db.models.fields.DateField', [], {}),
             'sales_start': ('django.db.models.fields.DateField', [], {}),
-            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'template': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.EventTemplate']"})
+            'start_time': ('django.db.models.fields.DateTimeField', [], {})
         },
-        u'tickets.eventtemplate': {
-            'Meta': {'object_name': 'EventTemplate'},
+        u'tickets.eventticket': {
+            'Meta': {'object_name': 'EventTicket'},
+            'event': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.Event']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'info': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'maximum': ('django.db.models.fields.IntegerField', [], {}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'text': ('django.db.models.fields.TextField', [], {})
+            'price': ('django.db.models.fields.FloatField', [], {})
         },
         u'tickets.staffmember': {
             'Meta': {'object_name': 'StaffMember'},
+            'event': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.Event']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'staff_type': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'})
         },
         u'tickets.ticket': {
             'Meta': {'object_name': 'Ticket'},
             'customer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.Customer']"}),
             'event': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.Event']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'template': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tickets.TicketTemplate']"}),
+            'template': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
             'ticket_active': ('django.db.models.fields.BooleanField', [], {})
-        },
-        u'tickets.tickettemplate': {
-            'Meta': {'object_name': 'TicketTemplate'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'text': ('django.db.models.fields.TextField', [], {})
         }
     }
 

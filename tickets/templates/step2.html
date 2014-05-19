@@ -36,37 +36,23 @@
             </div>
         </form>
     </div>
-    <table>
+    <p>Huidige winkelmand:</p>
+    <table class="table table-bordered table-responsive">
         <tr>
-            <td>Product:</td>
-            <td>aantal:</td>
-            <td>Prijs:</td>
+            <td><b>Product:</b></td>
+            <td><b>aantal:</b></td>
+            <td><b>Prijs:</b></td>
         </tr>
         {% for item in cart %}
-            <tr style="background:{% cycle '#CCCC' '#c8c8c8' %}">
-                <td id="item">{% get_ticket_from_session_name item %}</td>
+            <tr>
+                <td>{% get_ticket_from_session_name item %}</td>
                 <td>{{ cart|get_item:item }}</td>
-                <td><span id="sub_total"></span></td>
+                <td>€ {{ subtotal|get_item:item }}</td>
             </tr>
         {% endfor %}
-        <tr>
-            <td colspan="2">Totaal:</td>
-            <td></td>
+        <tr class="tr">
+            <td class="td" colspan="2">Totaal:</td>
+            <td class="td">€ {{ total }}</td>
         </tr>
     </table>
-
-    <script type="text/javascript">
-        $('.sub_total')(function (event) {
-            var total = 0;
-            var input = event.data;
-            $('#subtotal-' + id).html('€ ' + parseFloat(input.data('price').replace(',', '.')) * parseInt(value));
-            $('.input_small').each(function (index, input) {
-                var input2 = $(input);
-                var value = input.value;
-                console.log(input2.data('price'))
-                total += parseFloat(input2.data('price').replace(',', '.')) * parseInt(value);
-            })
-            $('#total').html('€ ' + total);
-        })
-    </script>
 {% endblock %}

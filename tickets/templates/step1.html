@@ -20,16 +20,20 @@
     </div>
     <hr>
 
-    <form name="tickets" method="post" action="{% url 'set_items' %}">
+    <form name="tickets" method="post" action="{% url 'set_items' event.id %}">
     {% csrf_token %}
-        <table>
+        <table class="table">
+        <td><b>Aantal:</b></td>
+        <td><b>Product:</b></td>
+        <td><b>Prijs:</b></td>
+        <td><b>Totaal:</b></td>
             {% for eventticket in eventtickets %}
-                <tr class="tr" style="background:{% cycle '#CCCC' '#c8c8c8' %}">
+                <tr>
                     <td>
-                        Aantal: <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
-                                       class="input_small" type="text" value="0"/>
+                        <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
+                                       class="input-sm" type="text" value="0"/>
                     </td>
-                    <td class="td">
+                    <td>
                         {{ eventticket.name }}
                     </td>
                     <td>
@@ -51,14 +55,14 @@
 <button class="btn centerMargin">Volgende</button>
     </form>
     <script type="text/javascript">
-        $('.input_small').on("change", function (event) {
+        $('.input-sm').on("change", function (event) {
             console.log(event);
             var input = $(event.target);
             var value = event.target.value;
             var id = event.target.id;
             $('#subtotal-' + id).html('€ ' + parseFloat(input.data('price').replace(',', '.')) * parseInt(value));
             var total = 0;
-            $('.input_small').each(function (index, input) {
+            $('.input-sm').each(function (index, input) {
                 var input2 = $(input);
                 var value = input.value;
                 console.log(input2.data('price'))
