@@ -22,7 +22,7 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="C:\Users\Aaron\tickets\ticketing_systeem\templates" />
+        <option value="$MODULE_DIR$/tickets/templates" />
       </list>
     </option>
   </component>

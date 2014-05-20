@@ -1,8 +1,1 @@
 {% extends 'base.html' %}
-{% block body %}
-{#   <a class="dropdown-toggle"> {% for event in eventticket %} {{ event.eventticket.event }} {% endfor %} </a>#}
-    <form action="/TicketSelectionForm/" method="post">{% csrf_token %}
-{{ TicketSelectionForm }}
-<input type="submit" value="Submit" />
-</form>
-{% endblock %}

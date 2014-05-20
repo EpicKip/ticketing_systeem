@@ -1,14 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django import forms
-from django.contrib.redirects.models import Redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from tickets.models import Event, EventTicket
 from django.core.urlresolvers import reverse
-from django.core.mail import send_mail
+
 
 def index(request):
     events = Event.objects.all()
@@ -16,9 +13,6 @@ def index(request):
 
 
 def user_login(request):
-    # Like before, obtain the context for the user's request.
-    context = RequestContext(request)
-
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Gather the username and password provided by the user.
@@ -26,7 +20,7 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        # Use Django's machinery to attempt to see if the username/password
+        # Attempt to see if the username/password
         # combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)
 
@@ -96,19 +90,19 @@ def step2(request, event_id):
         number2 = EventTicket.objects.get(id=eventticket.id).price
         total += float(number1) * float(number2)
         subtotal[str(eventticket.id)] = (float(number1) * float(number2))
-    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
+    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
+                                          'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
 
 
-@login_required
-def step3_login(request, event_id):
+def step3(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
+
     return render(request, 'step3.html', {'event': event})
 
 
-@login_required
 def step4(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
@@ -125,10 +119,6 @@ def register(request):
 
 
 def set_items(request, event_id):
-    try:
-        event = Event.objects.get(id=event_id)
-    except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
     request.session['cart'] = request.POST
     return HttpResponseRedirect(reverse('tickets.views.step2', args=(event_id,)))
 
@@ -136,24 +126,14 @@ def set_items(request, event_id):
 def mail(request, event_id):
     # send_mail('Subject here', 'Here is the message.', 'from@example.com',
     # ['to@example.com'], fail_silently=False)
-    return HttpResponseRedirect(reverse('tickets.views.step2_3', args=(event_id,)))
-
-
-def step2_3(request, event_id):
-    try:
-        event = Event.objects.get(id=event_id)
-    except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
-    request.session['mail'] = False
-    request.session['accept'] = request.POST
-    print request.session['accept']['terms']
-    print request.session['mail']
-    try:
-        accept = request.session['accept']['terms']
-    except ObjectDoesNotExist:
-        accept = "No"
-    if accept is "Yes":
-        return render(request, 'step2_3.html', {'event': event})
+    if request.POST.get('Email') is u'':
+        return HttpResponse("Enter your email...")
     else:
-        pass
-
+        if request.POST.get('terms') is None:
+            checkbox = 'off'
+        else:
+            checkbox = request.POST['terms']
+        if checkbox == 'on':
+            return HttpResponseRedirect(reverse('tickets.views.step3', args=(event_id,)))
+        else:
+            return HttpResponse("You dint click it yo")
