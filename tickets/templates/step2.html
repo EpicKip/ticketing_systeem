@@ -23,15 +23,15 @@
 
     <div id="Order">
     *Vul geen email adres in als u al ingelogd bent
-        <form method="post" action="{% url 'test' %}">
+        <form method="post" action="{% url 'mail' event.id %}">
             {% csrf_token %} <label class="Order-label" for="email">Email: </label>
             <input name="Email" id="email"><br/>
 
             <div class="center margin_terms">Do you agree to the <a href="#">tems and conditions</a><br/>
                 <label for="Yes">Yes
-                    <input type="radio" name="terms" value="Yes">
+                    <input type="radio" name="terms" id="terms1" value="Yes">
                 </label><br><label for="No">No
-                    <input type="radio" name="terms" value="No"></label><br/>
+                    <input type="radio" name="terms" id="terms2" value="No"></label><br/>
                 <button type="submit" class="center btn btn-primary btn-lg btn_register">Next</button>
             </div>
         </form>

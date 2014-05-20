@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^(?P<event_id>\d+)/step4/$', 'tickets.views.step4', name='step4'),
     url(r'^logout/$', 'tickets.views.user_logout', name='logout'),
     url(r'^(?P<event_id>\d+)/setItems/$', 'tickets.views.set_items', name='set_items'),
-    url(r'^test/$', 'tickets.views.test', name='test')
+    url(r'^(?P<event_id>\d+)/mail/$', 'tickets.views.mail', name='mail'),
+    url(r'^(?P<event_id>\d+)/step2_3/$', 'tickets.views.step2_3', name='step2_3')
 ]

@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.redirects.models import Redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
@@ -95,7 +96,6 @@ def step2(request, event_id):
         number2 = EventTicket.objects.get(id=eventticket.id).price
         total += float(number1) * float(number2)
         subtotal[str(eventticket.id)] = (float(number1) * float(number2))
-
     return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets, 'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
 
 
@@ -133,8 +133,27 @@ def set_items(request, event_id):
     return HttpResponseRedirect(reverse('tickets.views.step2', args=(event_id,)))
 
 
-def test(request):
+def mail(request, event_id):
     # send_mail('Subject here', 'Here is the message.', 'from@example.com',
     # ['to@example.com'], fail_silently=False)
-    print(request.session.get('cart'))
-    return HttpResponse("derp")
+    return HttpResponseRedirect(reverse('tickets.views.step2_3', args=(event_id,)))
+
+
+def step2_3(request, event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+    except Event.DoesNotExist:
+        event = Event.objects.get(id=1)
+    request.session['mail'] = False
+    request.session['accept'] = request.POST
+    print request.session['accept']['terms']
+    print request.session['mail']
+    try:
+        accept = request.session['accept']['terms']
+    except ObjectDoesNotExist:
+        accept = "No"
+    if accept is "Yes":
+        return render(request, 'step2_3.html', {'event': event})
+    else:
+        pass
+
