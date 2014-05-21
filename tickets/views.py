@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
@@ -113,9 +112,9 @@ def step4(request, event_id):
 
 def register(request):
     if request.user.is_authenticated():
-        return render_to_response('profile.html', context_instance=RequestContext(request))
+        return render_to_response('../http/static/accounts/profile.html', context_instance=RequestContext(request))
     else:
-        return render(request, 'register.html')
+        return render(request, '../http/static/accounts/register.html')
 
 
 def set_items(request, event_id):
