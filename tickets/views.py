@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.core.files import File
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext

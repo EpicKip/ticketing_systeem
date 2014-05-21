@@ -30,8 +30,10 @@
             {% for eventticket in eventtickets %}
                 <tr>
                     <td>
-                        <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
-                                       class="input-sm" type="text" value="0"/>
+                        <label>
+                            <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
+                                            class="input-sm" type="text" value="0"/>
+                        </label>
                     </td>
                     <td>
                         {{ eventticket.name }}
@@ -54,6 +56,8 @@
         </table>
 <button class="btn centerMargin">Volgende</button>
     </form>
+
+
     <script type="text/javascript">
         $('.input-sm').on("change", function (event) {
             console.log(event);
