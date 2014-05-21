@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tickets_filters %}
 {% block body %}
         <div class="step">
 <div class="step-div">
@@ -19,5 +20,19 @@
     </div>
         </div>
 <hr>
-    Step 4
+    <p>
+        Sluit dit scherm pas af als u de ticket heeft gedownload of de mail binnen hebt. <br />
+        Heeft u de mail niet binnen controlleer dan het ondersaande adres, verander hem indien nodig en klik op
+        opnieuw versturen.
+    </p>
+    <a href="{{ pdf|replace:'http'}}" download="ticket" class="btn btn-success">Download ticket</a>
+    <br /><br />
+    <form>
+        <label>
+            <input class="form-control" name="Email" id="email" value="{{ email }}">
+                    </label>
+        <br />
+            <button class="center btn btn-default" type="submit" value="submit" name="resend">opnieuw versturen</button>
+
+    </form>
 {% endblock %}

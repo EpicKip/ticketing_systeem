@@ -53,6 +53,7 @@ class Event(models.Model):
     event_active = models.BooleanField(verbose_name=_('event active'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
+    template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/' + str(id))
 
     def clean(self):
         if self.sales_start > self.sales_end:
@@ -88,8 +89,7 @@ class Ticket(models.Model):
 
     ticket_active = models.BooleanField(verbose_name=_('ticket active'))
     customer = models.ForeignKey('Customer', verbose_name=_('customer'))
-    event = models.ForeignKey('Event', verbose_name=_('event'))
-    template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/%Y/%m/%d')
+    event = models.ForeignKey('EventTicket', verbose_name=_('event ticket'))
 
     def __unicode__(self):
         return unicode(self.id)

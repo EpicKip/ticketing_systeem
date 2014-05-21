@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.files import File
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+from ticketing_systeem.settings import MEDIA_URL
 from tickets.models import Event, EventTicket
 from django.core.urlresolvers import reverse
 
@@ -19,11 +20,9 @@ def user_login(request):
         # This information is obtained from the login form.
         username = request.POST['username']
         password = request.POST['password']
-
         # Attempt to see if the username/password
         # combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)
-
         # If we have a User object, the details are correct.
         # If None, no user with matching credentials was found.
         if user is not None:
@@ -43,7 +42,6 @@ def user_login(request):
             return render_to_response('login.html', {'errormsg': "Username or password wrong, please try again or"
                                                                  " use the forgot option"},
                                       context_instance=RequestContext(request))
-
     else:
         # If the user goes to accounts/login show him the login page
         if request.user.is_authenticated():
@@ -108,7 +106,11 @@ def step4(request, event_id):
         event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
-    return render(request, 'step4.html', {'event': event})
+    pdf_file = open('http' + MEDIA_URL + str(event.logo), "r")
+    pdf_download = File(pdf_file)
+    if 'email' not in request.session:
+        request.session['email'] = ''
+    return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email']})
 
 
 def register(request):
@@ -129,6 +131,7 @@ def mail(request, event_id):
     if request.POST.get('Email') is u'':
         return HttpResponse("Enter your email...")
     else:
+        request.session['email'] = request.POST.get('Email')
         if request.POST.get('terms') is None:
             checkbox = 'off'
         else:

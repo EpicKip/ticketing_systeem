@@ -23,7 +23,12 @@
 
     <div id="Order">
         <form method="post" action="{% url 'mail' event.id %}">
-            {% csrf_token %} <label class="Order-label" for="email">Email: </label>
+            {% csrf_token %}
+            <label class="Order-label" for="first_name">Voornaam: </label>
+            <input name="First_name" id="first_name" value="{{ user.first_name }}"><br/>
+            <label class="Order-label" for="last_name">Achternaam: </label>
+            <input name="Last_name" id="last_name" value="{{ user.last_name }}"><br/>
+            <label class="Order-label" for="email">Email: </label>
             <input name="Email" id="email" value="{{ user.email }}"><br/>
     <p>Huidige winkelmand:</p>
     <table class="table table-bordered table-responsive">
