@@ -5,6 +5,7 @@ from django.template import RequestContext
 from ticketing_systeem.settings import MEDIA_URL
 from tickets.models import Event, EventTicket
 from django.core.urlresolvers import reverse
+from django.core.files import File
 
 
 def index(request):
@@ -87,29 +88,23 @@ def step2(request, event_id):
         number2 = EventTicket.objects.get(id=eventticket.id).price
         total += float(number1) * float(number2)
         subtotal[str(eventticket.id)] = (float(number1) * float(number2))
+    request.session['total'] = total
     return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
                                           'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
 
 
-def step3(request, event_id):
-    try:
-        event = Event.objects.get(id=event_id)
-    except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
-
-    return render(request, 'step3.html', {'event': event})
-
-
 def step4(request, event_id):
-    try:
-        event = Event.objects.get(id=event_id)
-    except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
-    pdf_file = open('http' + MEDIA_URL + str(event.logo), "r")
-    pdf_download = File(pdf_file)
-    if 'email' not in request.session:
-        request.session['email'] = ''
-    return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email']})
+    print request.GET
+    if 1 == 1:
+        try:
+            event = Event.objects.get(id=event_id)
+        except Event.DoesNotExist:
+            event = Event.objects.get(id=1)
+        pdf_file = open('http' + MEDIA_URL + str(event.logo), "r")
+        pdf_download = File(pdf_file)
+        if 'email' not in request.session:
+            request.session['email'] = ''
+        return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email']})
 
 
 def register(request):
@@ -127,15 +122,21 @@ def set_items(request, event_id):
 def mail(request, event_id):
     # send_mail('Subject here', 'Here is the message.', 'from@example.com',
     # ['to@example.com'], fail_silently=False)
-    if request.POST.get('Email') is u'':
+    if request.POST.get('email') is u'':
         return HttpResponse("Enter your email...")
     else:
-        request.session['email'] = request.POST.get('Email')
+        request.session['email'] = request.POST.get('email')
+        request.session['first_name'] = request.POST.get('first_name')
+        request.session['last_name'] = request.POST.get('last_name')
         if request.POST.get('terms') is None:
             checkbox = 'off'
         else:
             checkbox = request.POST['terms']
         if checkbox == 'on':
-            return HttpResponseRedirect(reverse('tickets.views.step3', args=(event_id,)))
+            return HttpResponseRedirect(reverse('step3', args=(event_id,)))
         else:
             return HttpResponse("You dint click it yo")
+
+
+def terms(request):
+    return render_to_response('terms.html', context_instance=RequestContext(request))

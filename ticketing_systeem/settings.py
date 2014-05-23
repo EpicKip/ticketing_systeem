@@ -41,7 +41,6 @@ INSTALLED_APPS = (
     'qrcode',
     'tickets',
     'PIL',
-    'tickets.templatetags',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -106,7 +105,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'http', 'media')
+SITE_ROOT = 'http://127.0.01:8000'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'http', 'static')
+
+#Mollie settings
+MOLLIE_REPORT_URL = SITE_ROOT + '/events/%s/step4'
 
 # Grappelli admin theme settings
 GRAPPELLI_ADMIN_TITLE = 'TICKET-SYSTEEM.COM - Admin Panel'

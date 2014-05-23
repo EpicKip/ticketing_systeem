@@ -22,12 +22,12 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'event', 'event_name')
-    search_fields = ['id', 'event_name', 'full_name']
+    list_display = ('id', 'ticket_type', 'event_name', 'order')
+    search_fields = ['id', 'event_name']
 
     @staticmethod
     def event_name(instance):
-        return instance.event.name
+        return instance.ticket_type.event.name
 
 
 class StaffMemberAdmin(admin.ModelAdmin):
@@ -46,8 +46,13 @@ class EventTicketAdmin(admin.ModelAdmin):
     list_display = ('name', 'event')
 
 
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'first_name', 'email', 'payment_status', 'total')
+
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(StaffMember, StaffMemberAdmin)
 admin.site.register(EventTicket, EventTicketAdmin)
+admin.site.register(Order, OrderAdmin)

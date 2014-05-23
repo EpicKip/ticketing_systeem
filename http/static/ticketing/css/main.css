@@ -126,6 +126,10 @@ table{
     margin-left: 40%;
 }
 
+.noBlock{
+    display: inline-block;
+    
+}
 
 
 

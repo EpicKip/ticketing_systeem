@@ -7,7 +7,7 @@ from django.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    #grappelli URLS
+    # grappelli URLS
     url(r'^grappelli/', include('grappelli.urls')),
 
     # admin site URLS
@@ -19,7 +19,11 @@ urlpatterns = patterns('',
     url(r'^accounts/login/$', 'tickets.views.user_login', name='login'),
 
     # register page
-    url(r'^accounts/register/$', 'tickets.views.register', name='register')
+    url(r'^accounts/register/$', 'tickets.views.register', name='register'),
 
+    # terms & conditions page
+    url(r'^termsandconditions/$', 'tickets.views.terms', name='terms'),
 
+    # Mollie webhook
+    url(r'^webhook/$', 'tickets.mollie_views.pay_report', name='webhook'),
 ) + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

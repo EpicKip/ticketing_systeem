@@ -12,6 +12,15 @@ STAFF_TYPES = (
     ('SC', _('Scanner'))
 )
 
+PAYMENT_STATUS = (
+    ('OPE', _('open')),
+    ('CAN', _('cancelled')),
+    ('PAI', _('paid')),
+    ('PAO', _('paidout')),
+    ('REF', _('refunded')),
+    ('EXP', _('expired'))
+)
+
 
 class Customer(models.Model):
     """
@@ -81,15 +90,22 @@ class EventTicket(models.Model):
     maximum = models.IntegerField(verbose_name=_('maximum'))
     info = models.CharField(max_length=500, verbose_name=_('information'))
 
+    def __unicode__(self):
+        return unicode(self.id)
+
+    class Meta:
+        verbose_name = _('ticket type')
+        verbose_name_plural = _('ticket types')
+
 
 class Ticket(models.Model):
     """
         Ticket class
     """
 
-    ticket_active = models.BooleanField(verbose_name=_('ticket active'))
-    customer = models.ForeignKey('Customer', verbose_name=_('customer'))
-    event = models.ForeignKey('EventTicket', verbose_name=_('event ticket'))
+    ticket_active = models.BooleanField(default=False, verbose_name=_('ticket active'))
+    ticket_type = models.ForeignKey('EventTicket', verbose_name=_('ticket type'))
+    order = models.ForeignKey('Order', verbose_name=_('order'))
 
     def __unicode__(self):
         return unicode(self.id)
@@ -108,6 +124,22 @@ class Ticket(models.Model):
         # except AttributeError:
         #     full = "ErrorName"
         return unicode(full)
+
+
+class Order(models.Model):
+    """
+        Order class
+    """
+    first_name = models.CharField(max_length=200, verbose_name=_('first name'))
+    last_name = models.CharField(max_length=200, verbose_name=_('last name'))
+    email = models.EmailField(verbose_name=_('email'))
+    date_time = models.DateTimeField(verbose_name=_('date time'))
+    payment_status = models.CharField(max_length=3, choices=PAYMENT_STATUS, verbose_name=_('payment status'))
+    raw_order = models.TextField(verbose_name=_('raw order'))
+    total = models.FloatField(verbose_name=_('total'))
+
+    def __unicode__(self):
+        return unicode(self.id)
 
 
 class StaffMember(models.Model):

@@ -25,11 +25,11 @@
         <form method="post" action="{% url 'mail' event.id %}">
             {% csrf_token %}
             <label class="Order-label" for="first_name">Voornaam: </label>
-            <input name="First_name" id="first_name" value="{{ user.first_name }}"><br/>
+            <input class="form-control noBlock" name="first_name" id="first_name" value="{{ user.first_name }}"><br/>
             <label class="Order-label" for="last_name">Achternaam: </label>
-            <input name="Last_name" id="last_name" value="{{ user.last_name }}"><br/>
+            <input class="form-control noBlock" name="last_name" id="last_name" value="{{ user.last_name }}"><br/>
             <label class="Order-label" for="email">Email: </label>
-            <input name="Email" id="email" value="{{ user.email }}"><br/>
+            <input class="form-control noBlock" name="email" id="email" value="{{ user.email }}"><br/>
     <p>Huidige winkelmand:</p>
     <table class="table table-bordered table-responsive">
         <tr>
@@ -50,9 +50,9 @@
         </tr>
     </table>
             <div class="center margin_terms"><label>
-                <input name="terms" type="checkbox" class="checkbox-inline">
+                <input name="terms" type="checkbox" class="checkbox-inline {% if form.fieldname.errors %}has-error{% endif %}">
             </label>
-                Ik ga akkoord met de <a href="#">algemene voorwaarden</a><br/>
+                Ik ga akkoord met de <a onclick="window.open('/termsandconditions', 'newwindow', 'width=300, height=250'); return false;">algemene voorwaarden</a><br/>
 
                 <button type="submit" class="center btn btn-lg">
                     Volgende
