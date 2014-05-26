@@ -1,7 +1,6 @@
 import Mollie
 from datetime import datetime
 from django.http import HttpResponseRedirect, HttpResponse
-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from ticketing_systeem import settings
@@ -44,7 +43,7 @@ def pay(request, event_id):
         cart = request.session['cart']
         for ticket_type, number in cart.iteritems():
             for index in range(0, int(number)):
-                ticket = Ticket.objects.create(**{
+                Ticket.objects.create(**{
                     'ticket_type_id': ticket_type,
                     'order_id': order.id,
                 })
@@ -60,6 +59,7 @@ def pay(request, event_id):
             'method': Mollie.API.Object.Method.IDEAL,
             'issuer': bank,  # e.g. 'ideal_INGBNL2A'
         })
+        # todo: Add transaction number to order
         return HttpResponseRedirect(payment.getPaymentUrl())
     else:
         #ideal = IDeal(partner_id=settings.IDEAL_PARTNER_ID, testmode=settings.MOLLIE_TEST_MODE)

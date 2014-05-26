@@ -6,6 +6,8 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+# These are all the staff types and Payment statuses, the word after the comma is what you will see in the admin panel,
+# but the text on the left is how it will be saved in the database
 STAFF_TYPES = (
     ('OG', _('Organizer')),
     ('MO', _('Moderator')),
@@ -25,6 +27,8 @@ PAYMENT_STATUS = (
 class Customer(models.Model):
     """
         Customer class
+            Customer has a 1 to 1 relationship with user
+            It also has a property full_name, this is used in the admin dashboard
     """
     user = models.OneToOneField(
         User,
@@ -37,8 +41,6 @@ class Customer(models.Model):
             full = self.user.first_name + " " + self.user.last_name
         else:
             full = "(" + str(self.user) + ")"
-        # except AttributeError:
-        #     full = "ErrorName"
         return unicode(full)
 
     class Meta:
@@ -52,6 +54,12 @@ class Customer(models.Model):
 class Event(models.Model):
     """
         Event class
+            Event has a lot of time related fields such as:
+                start/end_time  - The time the event starts/ends
+                sales_start/end - The time the sales start/end
+
+            Event has to be active too, this is done with the BooleanField: event_active
+            The clean method is the validation, it returns errors to the user when you don't pass validation.
     """
     name = models.CharField(max_length=100, verbose_name=_('name'))
     location = models.CharField(max_length=200, verbose_name=_('location'))
@@ -82,7 +90,9 @@ class Event(models.Model):
 
 class EventTicket(models.Model):
     """
-        Event ticket class (different kind of tickets per event)
+        Event ticket class
+            Every event has multiple kinds of tickets,
+            example: normal tickets and v.i.p. tickets
     """
     name = models.CharField(max_length=100, verbose_name=_('name'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
@@ -101,6 +111,8 @@ class EventTicket(models.Model):
 class Ticket(models.Model):
     """
         Ticket class
+            Every ticket is active (scanned) connected to a certain type (wich is connected to an Event)
+            and has a certain order Nr.
     """
 
     ticket_active = models.BooleanField(default=False, verbose_name=_('ticket active'))
@@ -129,6 +141,8 @@ class Ticket(models.Model):
 class Order(models.Model):
     """
         Order class
+            Every time you order tickets they will connect to an Order, this order contains the total price and
+            tells you wich tickets you bought and how many of them
     """
     first_name = models.CharField(max_length=200, verbose_name=_('first name'))
     last_name = models.CharField(max_length=200, verbose_name=_('last name'))
@@ -145,6 +159,7 @@ class Order(models.Model):
 class StaffMember(models.Model):
     """
         Staff member class
+            Staff member has a user connected to it, an event and a staff type
     """
 
     user = models.ForeignKey(User, verbose_name=_('user'), blank=True, null=True)
