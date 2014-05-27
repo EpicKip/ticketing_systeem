@@ -1,10 +1,10 @@
 import Mollie
-from datetime import datetime
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from ticketing_systeem import settings
-from tickets.models import Event, Order, Ticket
+from tickets import utils
+from tickets.models import Event
 
 
 def pay(request, event_id):
@@ -30,23 +30,10 @@ def pay(request, event_id):
     mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
 
     if request.method == "POST":
-        #Order maken en session['cart'] naar text veld in order tabel schijven - datum&tijd - Status - Gebruiker info
-        order = Order.objects.create(**{
-            'first_name': request.session['first_name'],
-            'last_name': request.session['last_name'],
-            'email': request.session['email'],
-            'date_time': datetime.now(),
-            'payment_status': 'OPE',
-            'raw_order': request.session['cart'],
-            'total': request.session['total']
-        })
-        cart = request.session['cart']
-        for ticket_type, number in cart.iteritems():
-            for index in range(0, int(number)):
-                Ticket.objects.create(**{
-                    'ticket_type_id': ticket_type,
-                    'order_id': order.id,
-                })
+        data = {'first_name': request.session['first_name'], 'last_name': request.session['last_name'],
+                'email': request.session['email'], 'cart': request.session['cart'],
+                'total': request.session['total']}
+        order = utils.create_order(data)
         bank = request.POST.get('bank')
         report_url = settings.MOLLIE_REPORT_URL % event_id
         payment = mollie.payments.create({
@@ -76,22 +63,23 @@ def pay(request, event_id):
 
 
 def pay_report(request):
-    """
-    Is called by ideal when payment was successful
-    """
-    if request.method == 'POST':
-        mollie = Mollie.API.Client()
-        mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
-        transaction_id = request.POST.get('id')
-        transaction = mollie.payments.get(transaction_id)
-        order_nr = transaction['metadata']['order_nr']
-        try:
-            order = Order.objects.get(transaction_id=transaction_id)
-        except Order.DoesNotExist:
-            raise Exception(_("There is no order that matches the transaction ID"))
-
-    if data['payed']:
-        invoice.status_id = STATUS_PAID
-        invoice.save()
-
-    return HttpResponse(json.dumps(data), mimetype="application/json")
+    pass
+#     """
+#     Is called by ideal when payment was successful
+#     """
+#     if request.method == 'POST':
+#         mollie = Mollie.API.Client()
+#         mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
+#         transaction_id = request.POST.get('id')
+#         transaction = mollie.payments.get(transaction_id)
+#         order_nr = transaction['metadata']['order_nr']
+#         try:
+#             order = Order.objects.get(transaction_id=transaction_id)
+#         except Order.DoesNotExist:
+#             raise Exception(_("There is no order that matches the transaction ID"))
+#
+#     if data['payed']:
+#         invoice.status_id = STATUS_PAID
+#         invoice.save()
+#
+#     return HttpResponse(json.dumps(data), mimetype="application/json")

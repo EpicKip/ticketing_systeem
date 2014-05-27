@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from tickets.models import StaffMember
 from django.utils.translation import ugettext_lazy as _
-from contrib import password_random
+from utils import password_random
 from django.contrib.auth.hashers import make_password
 
 
