@@ -1,3 +1,4 @@
+import os
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from ticketing_systeem.settings import MEDIA_URL
 
@@ -83,6 +84,7 @@ def create_pdf(name, orderid, ticketid, event):
     im = qr.make_image()
     im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
     can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
+    os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
     can.drawString(40, 150, "Terms :P" + str(name) + "ORDER:" + str(orderid) + "TICKET:" + str(ticketid))
     can.save()
     #move to the beginning of the StringIO buffer
