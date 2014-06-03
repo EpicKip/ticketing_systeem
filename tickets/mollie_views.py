@@ -32,7 +32,7 @@ def pay(request, event_id):
     if request.method == "POST":
         data = {'first_name': request.session['first_name'], 'last_name': request.session['last_name'],
                 'email': request.session['email'], 'cart': request.session['cart'],
-                'total': request.session['total']}
+                'total': request.session['total'], 'event': Event.objects.get(id=event_id)}
         order = utils.create_order(data)
         bank = request.POST.get('bank')
         report_url = settings.MOLLIE_REPORT_URL % event_id

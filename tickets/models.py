@@ -70,7 +70,7 @@ class Event(models.Model):
     event_active = models.BooleanField(verbose_name=_('event active'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
-    template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/' + str(id))
+    template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/%Y/%m/%d')
 
     def clean(self):
         if self.sales_start > self.sales_end:

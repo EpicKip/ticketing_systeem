@@ -1,4 +1,5 @@
 from PyPDF2 import PdfFileReader, PdfFileWriter
+from ticketing_systeem.settings import MEDIA_URL
 
 __author__ = 'Aaron'
 
@@ -7,7 +8,7 @@ import StringIO
 from qrcode import QRCode, ERROR_CORRECT_L
 from reportlab.pdfgen import canvas
 from datetime import datetime
-from tickets.models import Order, Ticket
+from tickets.models import Order, Ticket, Event
 
 
 def password_random(string_length):
@@ -28,15 +29,11 @@ def create_order(data):
         'total': data['total']
     })
     final = PdfFileWriter()
-    output_stream = file(r"C:\Users\Aaron\Desktop\tickets\Order" + str(order.id) + ".pdf", "wb")
-    output = create_tickets(data['cart'], order, data['first_name'] + data['last_name'], final)
-    output.write(output_stream)
-    output_stream.close()
+    create_tickets(data['cart'], order, data['first_name'] + data['last_name'], final, data['event'])
     return order
 
 
-def create_tickets(cart, order, name, final):
-    existing_pdf = PdfFileReader(file("C:\Users\Aaron\Desktop\motopiapdf.pdf", "rb"))
+def create_tickets(cart, order, name, final, event):
     for ticket_type, number in cart.iteritems():
                 for index in range(0, int(number)):
                     ticket = Ticket.objects.create(**{
@@ -66,34 +63,33 @@ def create_tickets(cart, order, name, final):
                     # page = output.getPage(0)
                     # final.addPage(page)
                     # final = PdfFileWriter()
-                    output = create_pdf(name, order.id, ticket.id)
+                    output = create_pdf(name, order.id, ticket.id, event)
                     page = output.getPage(0)
                     final.addPage(page)
-                    outputstream = file(r"C:\Users\Aaron\Desktop\tickets\Order" + str(order.id) + ".pdf", "wb")
-                    final.write(outputstream)
-                    outputstream.close()
+                    output_stream = file(r"http\media\temp\pdf\order" + str(order.id) + ".pdf", "wb")
+                    final.write(output_stream)
+                    output_stream.close()
     return final
 
 
-def create_pdf(name, orderid, ticketid):
+def create_pdf(name, orderid, ticketid, event):
     packet = StringIO.StringIO()
     # create a new PDF with Reportlab
     can = canvas.Canvas(packet)
-    qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50,
-    border=4,)
+    qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50, border=4,)
     qr.add_data(uuid.uuid4())
     qr.make(fit=True)  # Generate the QRCode itself
     # im contains a PIL.Image.Image object
     im = qr.make_image()
-    im.save(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 'JPEG')
-    can.drawImage(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 10, 10, 100, 100)
+    im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
+    can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
     can.drawString(40, 150, "Terms :P" + str(name) + "ORDER:" + str(orderid) + "TICKET:" + str(ticketid))
     can.save()
     #move to the beginning of the StringIO buffer
     packet.seek(0)
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
-    existing_pdf = PdfFileReader(file("C:\Users\Aaron\Desktop\motopiapdf.pdf", "rb"))
+    existing_pdf = PdfFileReader(file("http" + event.template.url, "rb"))
     output = PdfFileWriter()
     # add the "watermark" (which is the new pdf) on the existing page
     page = existing_pdf.getPage(0)
