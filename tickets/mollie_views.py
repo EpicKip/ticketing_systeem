@@ -5,6 +5,7 @@ from django.template import RequestContext
 from ticketing_systeem import settings
 from tickets import utils
 from tickets.models import Event
+from Mollie import API
 
 
 def pay(request, event_id):
@@ -51,7 +52,6 @@ def pay(request, event_id):
     else:
         #ideal = IDeal(partner_id=settings.IDEAL_PARTNER_ID, testmode=settings.MOLLIE_TEST_MODE)
         banks = mollie.issuers.all()
-
         return render_to_response(
             'step3.html', {
                 'event': event,
@@ -63,23 +63,35 @@ def pay(request, event_id):
 
 
 def pay_report(request):
-    pass
-#     """
-#     Is called by ideal when payment was successful
-#     """
-#     if request.method == 'POST':
-#         mollie = Mollie.API.Client()
-#         mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
-#         transaction_id = request.POST.get('id')
-#         transaction = mollie.payments.get(transaction_id)
-#         order_nr = transaction['metadata']['order_nr']
-#         try:
-#             order = Order.objects.get(transaction_id=transaction_id)
-#         except Order.DoesNotExist:
-#             raise Exception(_("There is no order that matches the transaction ID"))
-#
-#     if data['payed']:
-#         invoice.status_id = STATUS_PAID
-#         invoice.save()
-#
-#     return HttpResponse(json.dumps(data), mimetype="application/json")
+    """
+        Is called by ideal when payment was successful
+    """
+    try:
+        mollie = Mollie.API.Client()
+        mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
+        transaction_id = request.POST.get('id')
+        payment = mollie.payments.get(transaction_id)
+        order_nr = payment['metadata']['order_nr']
+        if payment.isPaid():
+            #
+            # At this point you'd probably want to start the process of delivering the product to the customer.
+            #
+            return 'Paid'
+        elif payment.isPending():
+            #
+            # The payment has started but is not complete yet.
+            #
+            return 'Pending'
+        elif payment.isOpen():
+            #
+            # The payment has not started yet. Wait for it.
+            #
+            return 'Open'
+        else:
+            #
+            # The payment isn't paid, pending nor open. We can assume it was aborted.
+            #
+            return 'Cancelled'
+
+    except API.Error as e:
+        return 'API call failed: ' + e.message
