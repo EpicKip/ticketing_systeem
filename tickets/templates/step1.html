@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tickets_filters %}
 {% block body %}
     <div class="step">
         <div class="step-active">
@@ -59,8 +60,7 @@
 
 
     <script type="text/javascript">
-        $('.input-sm').on("change", function (event) {
-            console.log(event);
+        function updateTotal(event) {
             var input = $(event.target);
             var value = event.target.value;
             var id = event.target.id;
@@ -70,10 +70,12 @@
             $('.input-sm').each(function (index, input) {
                 var input2 = $(input);
                 var value = input.value;
-                console.log(input2.data('price'));
                 total += parseFloat(input2.data('price').replace(',', '.')) * parseInt(value);
             });
             $('#total').html('€ ' + parseFloat(total).toFixed(2).replace(".00", ""));
-        })
+        }
+        $('.input-sm').on("change", updateTotal);
+        $.ready($('.input-sm').trigger("change"));
     </script>
+
 {% endblock %}

@@ -1,9 +1,12 @@
+from django.core.files.storage import FileSystemStorage
+
 __author__ = 'aaron'
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 # Create your models here.
 
 # These are all the staff types and Payment statuses, the word after the comma is what you will see in the admin panel,
@@ -22,6 +25,8 @@ PAYMENT_STATUS = (
     ('REF', _('refunded')),
     ('EXP', _('expired'))
 )
+
+fs = FileSystemStorage(location=settings.PDF_LOCATION)
 
 
 class Customer(models.Model):
@@ -151,6 +156,7 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=3, choices=PAYMENT_STATUS, verbose_name=_('payment status'))
     raw_order = models.TextField(verbose_name=_('raw order'))
     total = models.FloatField(verbose_name=_('total'))
+    pdf = models.FileField(blank=True, null=True, upload_to='pdf', storage=fs, verbose_name=_('pdf'))
 
     def __unicode__(self):
         return unicode(self.id)
@@ -193,4 +199,4 @@ class Terms(models.Model):
     """
         You can save the terms and conditions here
     """
-    terms = models.CharField(max_length=300, verbose_name=_('terms'))
+    terms = models.TextField(max_length=300, verbose_name=_('terms'))

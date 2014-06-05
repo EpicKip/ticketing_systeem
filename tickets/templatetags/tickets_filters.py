@@ -32,3 +32,4 @@ def get_ticket_from_session_price(eventticket_id):
 def replace(string1, string2):
     newstring = str(string1).replace(str(string2), '')
     return newstring
+

@@ -20,13 +20,12 @@
     </div>
         </div>
 <hr>
-    {% if status == "Paid"%}
     <p>
         Sluit dit scherm pas af als u de ticket heeft gedownload of de mail binnen hebt. <br />
         Heeft u de mail niet binnen controlleer dan het ondersaande adres, verander hem indien nodig en klik op
         opnieuw versturen.
     </p>
-    <a href="{{ pdf|replace:'http'}}" download="ticket" class="btn btn-success">Download ticket</a>
+    <a href="/events/download" download="ticket" class="btn btn-success">Download ticket</a>
     <br /><br />
     <form>
         <label>
@@ -36,5 +35,4 @@
             <button class="center btn btn-default" type="submit" value="submit" name="resend">opnieuw versturen</button>
 
     </form>
-    {% endif %}
 {% endblock %}

@@ -1,13 +1,15 @@
 from inspect import stack
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import RequestContext
-from ticketing_systeem.settings import MEDIA_URL
-from tickets.models import Event, EventTicket
+from filetransfers.api import serve_file
+from ticketing_systeem.base import MEDIA_URL
+from tickets.models import Event, EventTicket, Order
 from django.core.urlresolvers import reverse
 from django.core.files import File
 from tickets import mollie_views
+from decorators import *
 
 
 def index(request):
@@ -57,6 +59,7 @@ def user_logout(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@event_active()
 def show_event(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
@@ -65,6 +68,7 @@ def show_event(request, event_id):
     return render(request, 'index.html', {'event': event, 'eventticket': EventTicket})
 
 
+@event_active()
 def step1(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
@@ -75,6 +79,7 @@ def step1(request, event_id):
     return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets})
 
 
+@event_active()
 def step2(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
@@ -82,7 +87,8 @@ def step2(request, event_id):
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
         eventtickets = EventTicket.objects.filter(event_id=1)
-    del request.session['cart']['csrfmiddlewaretoken']
+    if 'csrfmiddlewaretoken' in request.session['cart']:
+        del request.session['cart']['csrfmiddlewaretoken']
     subtotal = {}
     total = 0
     for eventticket in eventtickets:
@@ -95,19 +101,17 @@ def step2(request, event_id):
                                           'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
 
 
+@event_active()
 def step4(request, event_id):
-    print request.GET
     if 1 == 1:
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:
             event = Event.objects.get(id=1)
-        pdf_file = open('http' + MEDIA_URL + str(event.logo), "r")
-        pdf_download = File(pdf_file)
         if 'email' not in request.session:
             request.session['email'] = ''
         status = ""
-        return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email'],
+        return render(request, 'step4.html', {'event': event, 'email': request.session['email'],
                                               'status': status})
 
 
@@ -144,3 +148,8 @@ def mail(request, event_id):
 
 def terms(request):
     return render_to_response('terms.html', context_instance=RequestContext(request))
+
+
+def download(request):
+    pdf = Order.objects.get(id=request.session['order'])
+    return serve_file(request, pdf.pdf)

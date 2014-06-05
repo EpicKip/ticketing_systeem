@@ -1,13 +1,14 @@
 __author__ = 'Aaron'
 import os
 from PyPDF2 import PdfFileReader, PdfFileWriter
-from ticketing_systeem.settings import MEDIA_URL
+from ticketing_systeem.base import MEDIA_URL
 import uuid
 import StringIO
 from qrcode import QRCode, ERROR_CORRECT_L
 from reportlab.pdfgen import canvas
 from datetime import datetime
 from tickets.models import Order, Ticket, Terms
+from django.conf import settings
 
 
 def password_random(string_length):
@@ -25,8 +26,10 @@ def create_order(data):
         'date_time': datetime.now(),
         'payment_status': 'OPE',
         'raw_order': data['cart'],
-        'total': data['total']
+        'total': data['total'],
     })
+    order.pdf = os.path.join(settings.PDF_LOCATION, "pdf", "order" + str(order.id) + '.pdf')
+    order.save()
     final = PdfFileWriter()
     create_tickets(data['cart'], order, data['first_name'] + data['last_name'], final, data['event'])
     return order
@@ -65,7 +68,7 @@ def create_tickets(cart, order, name, final, event):
                     output = create_pdf(name, order.id, ticket.id, event)
                     page = output.getPage(0)
                     final.addPage(page)
-                    output_stream = file(r"http\media\temp\pdf\order" + str(order.id) + ".pdf", "wb")
+                    output_stream = file(os.path.join(settings.PDF_LOCATION, "pdf", "order" + str(order.id) + ".pdf"), "wb")
                     final.write(output_stream)
                     output_stream.close()
     return final
@@ -83,10 +86,19 @@ def create_pdf(name, orderid, ticketid, event):
     im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
     can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
     os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
-    can.drawString(250, 110, Terms.objects.get(id=1).terms)
-    can.drawString(40, 150, str(name))
-    can.drawString(40, 135, "OrderNr: " + str(orderid))
-    can.drawString(40, 120, "TicketNr: " + str(ticketid))
+    terms = Terms.objects.get(id=1).terms
+    terms = terms.replace('\r\n', 'SPLIT')
+    terms = terms.split("SPLIT")
+    x = 150
+    for line in terms:
+        can.drawString(300, x, line)
+        x -= 15
+    can.drawString(20, 150, str(name))
+    can.drawString(20, 135, "OrderNr: " + str(orderid))
+    can.drawString(20, 120, "TicketNr: " + str(ticketid))
+    can.line(140, 160, 140, 5)
+    can.line(290, 160, 290, 5)
+    can.drawString(110, 150, "")
     can.save()
     #move to the beginning of the StringIO buffer
     packet.seek(0)

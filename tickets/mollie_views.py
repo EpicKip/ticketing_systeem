@@ -2,7 +2,7 @@ import Mollie
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from ticketing_systeem import settings
+from django.conf import settings
 from tickets import utils
 from tickets.models import Event
 from Mollie import API
@@ -35,6 +35,7 @@ def pay(request, event_id):
                 'email': request.session['email'], 'cart': request.session['cart'],
                 'total': request.session['total'], 'event': Event.objects.get(id=event_id)}
         order = utils.create_order(data)
+        request.session['order'] = order.id
         bank = request.POST.get('bank')
         report_url = settings.MOLLIE_REPORT_URL % event_id
         payment = mollie.payments.create({

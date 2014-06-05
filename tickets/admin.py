@@ -23,7 +23,8 @@ class EventAdmin(admin.ModelAdmin):
 
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('id', 'ticket_type', 'event_name', 'order')
-    search_fields = ['id', 'event_name']
+    search_fields = ['id', 'order__id',#'event__name'
+    ]
 
     @staticmethod
     def event_name(instance):
