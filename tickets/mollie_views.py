@@ -72,6 +72,7 @@ def pay_report(request):
         transaction_id = request.POST.get('id')
         payment = mollie.payments.get(transaction_id)
         order_nr = payment['metadata']['order_nr']
+
         if payment.isPaid():
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.

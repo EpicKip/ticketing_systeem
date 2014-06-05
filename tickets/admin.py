@@ -50,9 +50,14 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'first_name', 'email', 'payment_status', 'total')
 
 
+class TermsAdmin(admin.ModelAdmin):
+    list_display = ('terms',)
+
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(StaffMember, StaffMemberAdmin)
 admin.site.register(EventTicket, EventTicketAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Terms, TermsAdmin)

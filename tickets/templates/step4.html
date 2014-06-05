@@ -20,6 +20,7 @@
     </div>
         </div>
 <hr>
+    {% if status == "Paid"%}
     <p>
         Sluit dit scherm pas af als u de ticket heeft gedownload of de mail binnen hebt. <br />
         Heeft u de mail niet binnen controlleer dan het ondersaande adres, verander hem indien nodig en klik op
@@ -35,4 +36,5 @@
             <button class="center btn btn-default" type="submit" value="submit" name="resend">opnieuw versturen</button>
 
     </form>
+    {% endif %}
 {% endblock %}

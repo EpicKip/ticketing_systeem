@@ -1,15 +1,13 @@
+__author__ = 'Aaron'
 import os
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from ticketing_systeem.settings import MEDIA_URL
-
-__author__ = 'Aaron'
-
 import uuid
 import StringIO
 from qrcode import QRCode, ERROR_CORRECT_L
 from reportlab.pdfgen import canvas
 from datetime import datetime
-from tickets.models import Order, Ticket, Event
+from tickets.models import Order, Ticket, Terms
 
 
 def password_random(string_length):
@@ -85,7 +83,10 @@ def create_pdf(name, orderid, ticketid, event):
     im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
     can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
     os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
-    can.drawString(40, 150, "Terms :P" + str(name) + "ORDER:" + str(orderid) + "TICKET:" + str(ticketid))
+    can.drawString(250, 110, Terms.objects.get(id=1).terms)
+    can.drawString(40, 150, str(name))
+    can.drawString(40, 135, "OrderNr: " + str(orderid))
+    can.drawString(40, 120, "TicketNr: " + str(ticketid))
     can.save()
     #move to the beginning of the StringIO buffer
     packet.seek(0)

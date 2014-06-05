@@ -1,3 +1,4 @@
+from inspect import stack
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
@@ -6,6 +7,7 @@ from ticketing_systeem.settings import MEDIA_URL
 from tickets.models import Event, EventTicket
 from django.core.urlresolvers import reverse
 from django.core.files import File
+from tickets import mollie_views
 
 
 def index(request):
@@ -104,7 +106,9 @@ def step4(request, event_id):
         pdf_download = File(pdf_file)
         if 'email' not in request.session:
             request.session['email'] = ''
-        return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email']})
+        status = ""
+        return render(request, 'step4.html', {'event': event, 'pdf': pdf_download, 'email': request.session['email'],
+                                              'status': status})
 
 
 def register(request):

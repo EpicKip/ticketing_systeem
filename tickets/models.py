@@ -187,3 +187,10 @@ class StaffMember(models.Model):
     class Meta:
         verbose_name = _('staff member')
         verbose_name_plural = _('staff members')
+
+
+class Terms(models.Model):
+    """
+        You can save the terms and conditions here
+    """
+    terms = models.CharField(max_length=300, verbose_name=_('terms'))
