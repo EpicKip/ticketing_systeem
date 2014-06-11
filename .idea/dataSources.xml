@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" hash="318600314">
-    <data-source source="LOCAL" name="Django default" uuid="4a2ba172-1207-4ebf-a8bd-b49b0f952718">
-      <driver-ref>mysql</driver-ref>
+    <data-source source="LOCAL" name="Django default" product="" version="" jdbc-version="" driver-name="" driver-version="" uuid="4a2ba172-1207-4ebf-a8bd-b49b0f952718">
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://127.0.0.1/ticketing</jdbc-url>
       <user-name>root</user-name>
