@@ -55,6 +55,9 @@ class TermsAdmin(admin.ModelAdmin):
     list_display = ('terms',)
 
 
+class MollieKeyAdmin(admin.ModelAdmin):
+    list_display = ('key',)
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
@@ -62,3 +65,4 @@ admin.site.register(StaffMember, StaffMemberAdmin)
 admin.site.register(EventTicket, EventTicketAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Terms, TermsAdmin)
+admin.site.register(Mollie_key, MollieKeyAdmin)

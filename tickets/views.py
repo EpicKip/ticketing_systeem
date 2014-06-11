@@ -1,14 +1,11 @@
-from inspect import stack
+__author__ = 'Aaron'
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from filetransfers.api import serve_file
-from ticketing_systeem.base import MEDIA_URL
-from tickets.models import Event, EventTicket, Order
-from django.core.urlresolvers import reverse
-from django.core.files import File
-from tickets import mollie_views
+from tickets.models import EventTicket, Order
 from decorators import *
 
 
@@ -49,7 +46,7 @@ def user_login(request):
     else:
         # If the user goes to accounts/login show him the login page
         if request.user.is_authenticated():
-
+            return HttpResponseRedirect(request.GET['next'])
         else:
             return render_to_response('login.html', context_instance=RequestContext(request))
 
@@ -76,11 +73,19 @@ def step1(request, event_id):
     except Event.DoesNotExist:
         event = Event.objects.get(id=1)
         eventtickets = EventTicket.objects.filter(event_id=1)
-    return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets})
+    if 'error1' in request.session or 'error2' in request.session:
+        return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets,
+                                              'error1': request.session['error1'], 'error2': request.session['error2']})
+    else:
+        return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets})
 
 
 @event_active()
 def step2(request, event_id):
+    if 'error1' in request.session:
+        del request.session['error1']
+    if 'error2' in request.session:
+        del request.session['error2']
     try:
         event = Event.objects.get(id=event_id)
         eventtickets = EventTicket.objects.filter(event_id=event_id)
@@ -91,14 +96,31 @@ def step2(request, event_id):
         del request.session['cart']['csrfmiddlewaretoken']
     subtotal = {}
     total = 0
+    error1, error2 = "", ""
     for eventticket in eventtickets:
         number1 = request.session['cart'][str(eventticket.id)]
         number2 = EventTicket.objects.get(id=eventticket.id).price
-        total += float(number1) * float(number2)
-        subtotal[str(eventticket.id)] = (float(number1) * float(number2))
-    request.session['total'] = total
-    return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
-                                          'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
+        if "-" in str(number1):
+            error1 = "U kunt geen negatief aantal tickets bestellen."
+        if float(number1.replace(',', '.')).is_integer() is False:
+            error2 = "U kunt alleen een geheel getal aan tickets bestellen."
+        else:
+            total += int(number1) * int(number2)
+            subtotal[str(eventticket.id)] = (float(number1) * float(number2))
+    if error1 == "" and error2 == "":
+        request.session['total'] = total
+        if 'mail_error' in request.session or 'check_error' in request.session:
+            return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
+                                            'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total,
+                                            'error1': request.session['mail_error'],
+                                            'error2': request.session['check_error']})
+        else:
+            return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
+                                            'cart': request.session.get('cart'), 'subtotal': subtotal, 'total': total})
+    else:
+        request.session['error1'] = error1
+        request.session['error2'] = error2
+        return HttpResponseRedirect(reverse('step1', args=(event_id,)))
 
 
 @event_active()
@@ -128,22 +150,30 @@ def set_items(request, event_id):
 
 
 def mail(request, event_id):
+    if 'mail_error' in request.session:
+        del request.session['mail_error']
+    if 'check_error' in request.session:
+        del request.session['check_error']
     # send_mail('Subject here', 'Here is the message.', 'from@example.com',
     # ['to@example.com'], fail_silently=False)
+    mail_error = ""
+    check_error = ""
     if request.POST.get('email') is u'':
-        return HttpResponse("Enter your email...")
+        mail_error = "You have to enter your email."
+    request.session['email'] = request.POST.get('email')
+    request.session['first_name'] = request.POST.get('first_name')
+    request.session['last_name'] = request.POST.get('last_name')
+    if request.POST.get('terms') is None:
+        checkbox = 'off'
     else:
-        request.session['email'] = request.POST.get('email')
-        request.session['first_name'] = request.POST.get('first_name')
-        request.session['last_name'] = request.POST.get('last_name')
-        if request.POST.get('terms') is None:
-            checkbox = 'off'
-        else:
-            checkbox = request.POST['terms']
-        if checkbox == 'on':
-            return HttpResponseRedirect(reverse('step3', args=(event_id,)))
-        else:
-            return HttpResponse("You dint click it yo")
+        checkbox = request.POST['terms']
+    if checkbox == 'on' and request.POST.get('email') is not u'':
+        return HttpResponseRedirect(reverse('step3', args=(event_id,)))
+    else:
+        check_error = "The checkbox has to be checked"
+        request.session['mail_error'] = mail_error
+        request.session['check_error'] = check_error
+        return HttpResponseRedirect(reverse('step2', args=(event_id,)))
 
 
 def terms(request):

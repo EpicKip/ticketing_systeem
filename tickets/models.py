@@ -70,20 +70,14 @@ class Event(models.Model):
     location = models.CharField(max_length=200, verbose_name=_('location'))
     start_time = models.DateTimeField(verbose_name=_('start time'))
     end_time = models.DateTimeField(verbose_name=_('end time'))
-    sales_start = models.DateField(verbose_name=_('sales start'))
-    sales_end = models.DateField(verbose_name=_('sales end'))
     event_active = models.BooleanField(verbose_name=_('event active'))
     information = models.CharField(max_length=500, verbose_name=_('information'))
     logo = models.ImageField(verbose_name=_('logo'), blank=True, upload_to='img/%Y/%m/%d')
     template = models.FileField(verbose_name=_('ticket template'), blank=True, upload_to='template/%Y/%m/%d')
 
     def clean(self):
-        if self.sales_start > self.sales_end:
-            raise ValidationError(_('The start of the sales can\'t be after the end...'))
         if self.start_time > self.end_time:
             raise ValidationError(_('The start of the event can\'t be after the end...'))
-        if self.start_time.date() < self.sales_end:
-            raise ValidationError(_('The sales can\'t end more then a day after the event itself...'))
 
     def __unicode__(self):
         return unicode(self.name)
@@ -200,3 +194,10 @@ class Terms(models.Model):
         You can save the terms and conditions here
     """
     terms = models.TextField(max_length=300, verbose_name=_('terms'))
+
+
+class Mollie_key(models.Model):
+    """
+        You can save the terms and conditions here
+    """
+    key = models.CharField(max_length=300, verbose_name=_('terms'))

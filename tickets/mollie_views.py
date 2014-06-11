@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 from tickets import utils
-from tickets.models import Event
+from tickets.models import Event, Mollie_key
 from Mollie import API
 
 
@@ -28,7 +28,7 @@ def pay(request, event_id):
         event = Event.objects.get(id=1)
     errors = []
     mollie = Mollie.API.Client()
-    mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
+    mollie.setApiKey(Mollie_key.objects.get(id=1).key)
 
     if request.method == "POST":
         data = {'first_name': request.session['first_name'], 'last_name': request.session['last_name'],
@@ -51,7 +51,6 @@ def pay(request, event_id):
         # todo: Add transaction number to order
         return HttpResponseRedirect(payment.getPaymentUrl())
     else:
-        #ideal = IDeal(partner_id=settings.IDEAL_PARTNER_ID, testmode=settings.MOLLIE_TEST_MODE)
         banks = mollie.issuers.all()
         return render_to_response(
             'step3.html', {
@@ -69,7 +68,7 @@ def pay_report(request):
     """
     try:
         mollie = Mollie.API.Client()
-        mollie.setApiKey('test_Wsultq8WxKJPvWzBhd5ypbyX1606Ux')
+        mollie.setApiKey(Mollie_key.objects.get(id=1).key)
         transaction_id = request.POST.get('id')
         payment = mollie.payments.get(transaction_id)
         order_nr = payment['metadata']['order_nr']

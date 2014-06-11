@@ -20,7 +20,9 @@
         </div>
     </div>
     <hr>
-
+ {% if error1 != "" or error2 != "" %}
+        <p class="text-danger">{{ error1 }} <br /> {{ error2 }}</p>
+    {% endif %}
     <div id="Order">
         <form method="post" action="{% url 'mail' event.id %}">
             {% csrf_token %}
