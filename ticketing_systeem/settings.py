@@ -1,6 +1,6 @@
 __author__ = 'Aaron'
 
-DEVELOPMENT_MACHINES = ('PETERPC',)
+DEVELOPMENT_MACHINES = ('PETERPC', 'Harry')
 TESTING_MACHINES = ('ip-10-227-39-94',)
 PRODUCTION_MACHINES = ('ip-10-48-199-83',)
 
@@ -19,7 +19,7 @@ def get_server_name():
     if server_type:
         return server_type
     if server_name in DEVELOPMENT_MACHINES:
-        if server_name == 'PETERPC':
+        if server_name == 'PETERPC' or 'Harry':
             return 'settings_aaron'
     if server_name in TESTING_MACHINES:
         return 'testing'

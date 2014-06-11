@@ -40,7 +40,7 @@
                 </div>
         {% if not user.is_authenticated %}
             <div class="navbar-collapse collapse">
-                <form id="login_form" class="navbar-form navbar-right" method="post" action="{% url 'login' %}">
+                <form id="login_form" class="navbar-form navbar-right" method="post" action="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">
                     {% csrf_token %}
                     <div class="form-group">
                         <input type="text" placeholder="Username" name="username" id="id_username" class="form-control">

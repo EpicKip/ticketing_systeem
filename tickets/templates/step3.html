@@ -19,18 +19,18 @@
     </div>
         </div>
 <hr>
-    <form method="post" action="{% url 'step3' event.id %}">
+    <form method="post" class="center" action="{% url 'step3' event.id %}">
     {% csrf_token %}
     <label for="bank">Selecteer uw bank: </label>
-    <select name="bank" id="bank">
+    <select class="form-control-static" name="bank" id="bank">
     {% for bank in banks %}
         {% if bank.method == 'ideal' %}
-            <option value="{{ bank.id }}">
+            <option class="dropdown" value="{{ bank.id }}">
                 {{ bank.name }}
             </option>
         {% endif %}
     {% endfor %}
     </select>
-    <button type="submit">Betalen</button>
+    <button class="btn-lg btn" type="submit">Betalen</button>
     </form>
 {% endblock %}

@@ -53,12 +53,13 @@
                 <input name="terms" type="checkbox" class="checkbox-inline {% if form.fieldname.errors %}has-error{% endif %}">
             </label>
                 Ik ga akkoord met de <a onclick="window.open('/termsandconditions', 'newwindow', 'width=300, height=250'); return false;">algemene voorwaarden</a><br/>
-
+                <a class="btn center btn-lg btn-warning" onclick="javascript:history.go(-1)">Vorige stap</a>
                 <button type="submit" class="center btn btn-lg">
+
                     Volgende
                 </button>
             </div>
         </form>
-    <button class="btn btn-default btn-warning" onclick="javascript:history.go(-1)">Vorige stap</button>
+
     </div>
 {% endblock %}
