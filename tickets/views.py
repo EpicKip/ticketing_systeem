@@ -1,3 +1,6 @@
+import email
+from django.core.mail import send_mail
+
 __author__ = 'Aaron'
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -71,8 +74,7 @@ def step1(request, event_id):
         event = Event.objects.get(id=event_id)
         eventtickets = EventTicket.objects.filter(event_id=event_id)
     except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
-        eventtickets = EventTicket.objects.filter(event_id=1)
+        return render(request, "inactive.html")
     if 'error1' in request.session or 'error2' in request.session:
         return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets,
                                               'error1': request.session['error1'], 'error2': request.session['error2']})
@@ -90,8 +92,7 @@ def step2(request, event_id):
         event = Event.objects.get(id=event_id)
         eventtickets = EventTicket.objects.filter(event_id=event_id)
     except Event.DoesNotExist:
-        event = Event.objects.get(id=1)
-        eventtickets = EventTicket.objects.filter(event_id=1)
+        return render(request, "inactive.html")
     if 'csrfmiddlewaretoken' in request.session['cart']:
         del request.session['cart']['csrfmiddlewaretoken']
     subtotal = {}
@@ -126,10 +127,28 @@ def step2(request, event_id):
 @event_active()
 def step4(request, event_id):
     if 1 == 1:
+        msg = email.mime.Multipart.MIMEMultipart()
+        body = email.mime.Text.MIMEText("""In de bijlage vind u een ticket die u uit kunt printen.""")
+        msg.attach(body)
+        filename = Order.objects.get(id=request.session['order'])
+        fp = open(filename, 'rb')
+        att = email.mime.application.MIMEApplication(fp.read(), _subtype="pdf")
+        fp.close()
+        att.add_header('Content-Disposition', 'attachment', filename=filename)
+        msg.attach(att)
+        send_mail('Ticket' + Event.objects.get(id=event_id).name, 'ticketing@nationevents.nl', 'In de bijlage van'
+                                                                                               'dit bericht zult u uw'
+                                                                                               'ticket vinden in pdf '
+                                                                                               'formaat, bij enige '
+                                                                                               'problemen stuur een '
+                                                                                               'mail naar: '
+                                                                                               'SUPERNEP@fake.com',
+        request.session['email'],
+                  )
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:
-            event = Event.objects.get(id=1)
+            return render(request, "inactive.html")
         if 'email' not in request.session:
             request.session['email'] = ''
         status = ""
@@ -154,8 +173,6 @@ def mail(request, event_id):
         del request.session['mail_error']
     if 'check_error' in request.session:
         del request.session['check_error']
-    # send_mail('Subject here', 'Here is the message.', 'from@example.com',
-    # ['to@example.com'], fail_silently=False)
     mail_error = ""
     check_error = ""
     if request.POST.get('email') is u'':
