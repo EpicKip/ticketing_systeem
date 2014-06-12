@@ -83,9 +83,9 @@ def create_pdf(name, orderid, ticketid, event):
     qr.make(fit=True)  # Generate the QRCode itself
     # im contains a PIL.Image.Image object
     im = qr.make_image()
-    im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
-    can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
-    os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
+    im.save(os.path.join(settings.PDF_LOCATION, 'qr', "qr" + str(ticketid) + ".jpg"), 'JPEG')
+    can.drawImage(os.path.join(settings.PDF_LOCATION, 'qr', 'qr' + str(ticketid) + ".jpg"), 10, 10, 100, 100)
+    os.remove(os.path.join(settings.PDF_LOCATION, 'qr', 'qr' + str(ticketid) + ".jpg"))
     terms = Terms.objects.get(id=1).terms
     terms = terms.replace('\r\n', 'SPLIT')
     terms = terms.split("SPLIT")
@@ -104,7 +104,7 @@ def create_pdf(name, orderid, ticketid, event):
     packet.seek(0)
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
-    existing_pdf = PdfFileReader(file("http" + event.template.url, "rb"))
+    existing_pdf = PdfFileReader(file(event.template.path, "rb"))
     output = PdfFileWriter()
     # add the "watermark" (which is the new pdf) on the existing page
     page = existing_pdf.getPage(0)

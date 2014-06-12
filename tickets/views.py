@@ -98,7 +98,8 @@ def step2(request, event_id):
     total = 0
     error1, error2 = "", ""
     for eventticket in eventtickets:
-        number1 = request.session['cart'][str(eventticket.id)]
+        cart = request.session['cart']
+	number1 = request.session['cart'][str(eventticket.id)][0]
         number2 = EventTicket.objects.get(id=eventticket.id).price
         if "-" in str(number1):
             error1 = "U kunt geen negatief aantal tickets bestellen."
@@ -145,7 +146,13 @@ def register(request):
 
 
 def set_items(request, event_id):
-    request.session['cart'] = request.POST
+    cart = request.POST
+    new_cart = dict()
+    for key, value in cart.iteritems():
+	if type(value)==type(list()):
+            value = value[0]
+        new_cart[key] = value
+    request.session['cart'] = new_cart
     return HttpResponseRedirect(reverse('tickets.views.step2', args=(event_id,)))
 
 

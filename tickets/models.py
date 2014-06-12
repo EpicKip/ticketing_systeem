@@ -201,3 +201,4 @@ class Mollie_key(models.Model):
         You can save the terms and conditions here
     """
     key = models.CharField(max_length=300, verbose_name=_('terms'))
+
