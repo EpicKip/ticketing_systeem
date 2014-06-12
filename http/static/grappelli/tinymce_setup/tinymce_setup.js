@@ -31,7 +31,7 @@ tinyMCE.init({
     
     // General
     accessibility_warnings: false,
-    browsers: 'gecko,msie,safari,opera,chrome',
+    browsers: 'gecko,msie,safari,opera',
     dialog_type: 'window',
     editor_deselector: 'mceNoEditor',
     keep_styles: false,
