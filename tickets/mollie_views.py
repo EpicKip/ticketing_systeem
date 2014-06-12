@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 from tickets import utils
-from tickets.models import Event, Mollie_key
+from tickets.models import Event, Mollie_key, Order
 from Mollie import API
 
 
@@ -49,6 +49,7 @@ def pay(request, event_id):
             'issuer': bank,  # e.g. 'ideal_INGBNL2A'
         })
         # todo: Add transaction number to order
+
         return HttpResponseRedirect(payment.getPaymentUrl())
     else:
         banks = mollie.issuers.all()
@@ -77,6 +78,8 @@ def pay_report(request):
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.
             #
+            order = Order
+            Order.payment_status
             return 'Paid'
         elif payment.isPending():
             #

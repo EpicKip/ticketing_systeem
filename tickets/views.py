@@ -127,15 +127,15 @@ def step2(request, event_id):
 @event_active()
 def step4(request, event_id):
     if 1 == 1:
-        msg = email.mime.Multipart.MIMEMultipart()
-        body = email.mime.Text.MIMEText("""In de bijlage vind u een ticket die u uit kunt printen.""")
-        msg.attach(body)
-        filename = Order.objects.get(id=request.session['order'])
-        fp = open(filename, 'rb')
-        att = email.mime.application.MIMEApplication(fp.read(), _subtype="pdf")
-        fp.close()
-        att.add_header('Content-Disposition', 'attachment', filename=filename)
-        msg.attach(att)
+        # msg = email.mime.Multipart.MIMEMultipart()
+        # body = email.mime.Text.MIMEText("""In de bijlage vind u een ticket die u uit kunt printen.""")
+        # msg.attach(body)
+        # filename = Order.objects.get(id=request.session['order']).pdf.path
+        # fp = open(filename, 'rb')
+        # att = email.mime.application.MIMEApplication(fp.read(), _subtype="pdf")
+        # fp.close()
+        # att.add_header('Content-Disposition', 'attachment', filename=filename)
+        # msg.attach(att)
         send_mail('Ticket' + Event.objects.get(id=event_id).name, 'ticketing@nationevents.nl', 'In de bijlage van'
                                                                                                'dit bericht zult u uw'
                                                                                                'ticket vinden in pdf '
@@ -143,8 +143,7 @@ def step4(request, event_id):
                                                                                                'problemen stuur een '
                                                                                                'mail naar: '
                                                                                                'SUPERNEP@fake.com',
-        request.session['email'],
-                  )
+        [request.session['email']], fail_silently=True)
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:

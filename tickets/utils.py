@@ -104,7 +104,7 @@ def create_pdf(name, orderid, ticketid, event):
     packet.seek(0)
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
-    existing_pdf = PdfFileReader(file("http" + event.template.url, "rb"))
+    existing_pdf = PdfFileReader(file("http" + event.template.path, "rb"))
     output = PdfFileWriter()
     # add the "watermark" (which is the new pdf) on the existing page
     page = existing_pdf.getPage(0)
