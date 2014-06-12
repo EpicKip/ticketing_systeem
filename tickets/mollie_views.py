@@ -78,8 +78,6 @@ def pay_report(request):
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.
             #
-            order = Order
-            Order.payment_status
             return 'Paid'
         elif payment.isPending():
             #
