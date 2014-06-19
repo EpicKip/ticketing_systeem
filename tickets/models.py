@@ -93,7 +93,7 @@ class EventTicket(models.Model):
             Every event has multiple kinds of tickets,
             example: normal tickets and v.i.p. tickets
     """
-    name = models.CharField(max_length=100, verbose_name=_('name'))
+    name = models.CharField(max_length=40, verbose_name=_('name'))
     event = models.ForeignKey('Event', verbose_name=_('event'))
     price = models.FloatField(verbose_name=_('price'))
     maximum = models.IntegerField(verbose_name=_('maximum'))

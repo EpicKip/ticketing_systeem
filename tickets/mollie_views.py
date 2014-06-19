@@ -1,4 +1,5 @@
 import Mollie
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -36,6 +37,7 @@ def pay(request, event_id):
                 'total': request.session['total'], 'event': Event.objects.get(id=event_id)}
         order = utils.create_order(data)
         request.session['order'] = order.id
+        request.session['event'] = event_id
         bank = request.POST.get('bank')
         report_url = settings.MOLLIE_REPORT_URL % event_id
         payment = mollie.payments.create({
@@ -78,11 +80,21 @@ def pay_report(request):
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.
             #
+            send_mail('Ticket' + Event.objects.get(id=request.session['event']).name, 'In de bijlage van'
+                                                                                      'dit bericht zult u uw'
+                                                                                      'ticket vinden in pdf '
+                                                                                      'formaat, bij enige '
+                                                                                      'problemen stuur een '
+                                                                                      'mail naar: '
+                                                                                      'SUPERNEP@fake.com',
+                      'ticketing@nationevents.nl',
+            [request.session['email']], fail_silently=True)
             return 'Paid'
         elif payment.isPending():
             #
             # The payment has started but is not complete yet.
             #
+
             return 'Pending'
         elif payment.isOpen():
             #

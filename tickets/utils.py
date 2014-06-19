@@ -65,7 +65,7 @@ def create_tickets(cart, order, name, final, event):
                     # page = output.getPage(0)
                     # final.addPage(page)
                     # final = PdfFileWriter()
-                    output = create_pdf(name, order.id, ticket.id, event)
+                    output = create_pdf(name, order.id, ticket.id, event, ticket.ticket_type.name)
                     page = output.getPage(0)
                     final.addPage(page)
                     output_stream = file(os.path.join(settings.PDF_LOCATION, "pdf", "order" + str(order.id) + ".pdf"), "wb")
@@ -74,7 +74,7 @@ def create_tickets(cart, order, name, final, event):
     return final
 
 
-def create_pdf(name, orderid, ticketid, event):
+def create_pdf(name, orderid, ticketid, event, tickettype):
     packet = StringIO.StringIO()
     # create a new PDF with Reportlab
     can = canvas.Canvas(packet)
@@ -84,7 +84,7 @@ def create_pdf(name, orderid, ticketid, event):
     # im contains a PIL.Image.Image object
     im = qr.make_image()
     im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
-    can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 10, 10, 100, 100)
+    can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 150, 50, 125, 125)
     os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
     terms = Terms.objects.get(id=1).terms
     terms = terms.replace('\r\n', 'SPLIT')
@@ -96,15 +96,14 @@ def create_pdf(name, orderid, ticketid, event):
     can.drawString(20, 150, str(name))
     can.drawString(20, 135, "OrderNr: " + str(orderid))
     can.drawString(20, 120, "TicketNr: " + str(ticketid))
-    can.line(140, 160, 140, 5)
+    can.drawString(20, 30, "Type: " + str(tickettype))
     can.line(290, 160, 290, 5)
-    can.drawString(110, 150, "")
     can.save()
     #move to the beginning of the StringIO buffer
     packet.seek(0)
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
-    existing_pdf = PdfFileReader(file("http" + event.template.path, "rb"))
+    existing_pdf = PdfFileReader(file(event.template.path, "rb"))
     output = PdfFileWriter()
     # add the "watermark" (which is the new pdf) on the existing page
     page = existing_pdf.getPage(0)

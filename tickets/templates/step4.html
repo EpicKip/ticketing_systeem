@@ -20,6 +20,9 @@
     </div>
         </div>
 <hr>
+    {% if error1 %}
+        <p class="text-danger">{{ error1 }}</p>
+    {% endif %}
     <p>
         Sluit dit scherm pas af als u de ticket heeft gedownload of de mail binnen hebt. <br />
         Heeft u de mail niet binnen controlleer dan het ondersaande adres, verander hem indien nodig en klik op
@@ -27,9 +30,10 @@
     </p>
     <a href="/events/download" download="ticket" class="btn btn-success">Download ticket</a>
     <br /><br />
-    <form>
+    <form method="post" action="{% url 'step4' event.id %}">
+    {% csrf_token %}
         <label>
-            <input class="form-control" name="Email" id="email" value="{{ email }}">
+            <input class="form-control" name="email" id="email" value="{{ email }}">
                     </label>
             <button class="center btn btn-default" type="submit" value="submit" name="resend">opnieuw versturen</button>
 
