@@ -74,6 +74,7 @@ def pay_report(request):
     """
         Is called by ideal when payment was successful
     """
+    print request.POST
     try:
         mollie = Mollie.API.Client()
         mollie.setApiKey(MollieKey.objects.get(id=1).key)
