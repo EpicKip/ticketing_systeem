@@ -42,6 +42,11 @@ def pay(request, event_id):
         request.session['order'] = order.id
         request.session['event'] = event_id
         bank = request.POST.get('bank')
+        Customer.objects.get_or_create(**{
+                'first_name': request.session['first_name'],
+                'last_name': request.session['last_name'],
+                'email': request.session['email']
+        })
         report_url = settings.MOLLIE_REPORT_URL % event_id
         payment = mollie.payments.create({
             'amount': request.session['total'],
@@ -88,7 +93,10 @@ def pay_report(request):
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.
             #
-            send_mail('Ticket' + Event.objects.get(id=request.session['event']).name, 'In de bijlage van'
+            order = Order.objects.get(id=order_nr)
+            order.payment_status = 'PAI'
+            order.save()
+            send_mail('Ticket', 'In de bijlage van'
                                                                                       'dit bericht zult u uw'
                                                                                       'ticket vinden in pdf '
                                                                                       'formaat, bij enige '
@@ -96,15 +104,7 @@ def pay_report(request):
                                                                                       'mail naar: '
                                                                                       'SUPERNEP@fake.com',
                       'ticketing@in2systems.nl',
-                      [request.session['email']], fail_silently=True)
-            order = Order.objects.get(id=order_nr)
-            order.payment_status = 'PAI'
-            order.save()
-            Customer.objects.get_or_create(**{
-                'first_name': request.session['first_name'],
-                'last_name': request.session['last_name'],
-                'email': request.session['email']
-            })
+                      [order.email], fail_silently=True)
             return HttpResponse('Paid')
         elif payment.isPending():
             #
