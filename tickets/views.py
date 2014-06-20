@@ -86,6 +86,7 @@ def step1(request, event_id):
             if type(value) == type(list()):
                 cart[key] = value[0]
         request.session['cart'] = cart
+        print request.session['cart']
         if 'csrfmiddlewaretoken' in request.session['cart']:
             del request.session['cart']['csrfmiddlewaretoken']
         negative_error, decimal_error = '', ''
