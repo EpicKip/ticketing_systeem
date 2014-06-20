@@ -167,6 +167,8 @@ def step4(request, event_id):
         server_name = platform.node().split('.')[0]
         if order.payment_status == 'PAI' or server_name == 'PETERPC':
             return render(request, 'step4.html', {'event': event, 'email': request.session['email']})
+        else:
+            return render(request, 'notpaid.html', {'event': event})
     if request.method == 'POST':
         errors = {}
         if request.POST.get('email') == '':
