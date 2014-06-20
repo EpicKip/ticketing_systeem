@@ -1,7 +1,7 @@
 import Mollie
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
@@ -103,7 +103,7 @@ def pay_report(request):
                 'last_name': request.session['last_name'],
                 'email': request.session['email']
             })
-            return 'Paid'
+            return HttpResponse('Paid')
         elif payment.isPending():
             #
             # The payment has started but is not complete yet.
@@ -111,7 +111,7 @@ def pay_report(request):
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'PEN'
             order.save()
-            return 'Pending'
+            return HttpResponse('Pending')
         elif payment.isOpen():
             #
             # The payment has not started yet. Wait for it.
@@ -119,7 +119,7 @@ def pay_report(request):
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'OPE'
             order.save()
-            return 'Open'
+            return HttpResponse('Open')
         else:
             #
             # The payment isn't paid, pending nor open. We can assume it was aborted.
@@ -127,7 +127,7 @@ def pay_report(request):
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'CAN'
             order.save()
-            return 'Cancelled'
+            return HttpResponse('Cancelled')
 
     except API.Error as e:
-        return 'API call failed: ' + e.message
+        return HttpResponse('API call failed: ' + e.message)
