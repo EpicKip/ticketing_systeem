@@ -82,9 +82,9 @@ def step1(request, event_id):
     elif request.method == 'POST':
         errors = {}
         cart = request.POST.copy()
-        for key, value in cart.iteritems():
-            if type(value) == type(list()):
-                cart[key] = value[0]
+        # for key, value in cart.iteritems():
+        #     if type(value) == 'list':
+        #         cart[key] = value[0]
         request.session['cart'] = cart
         print request.session['cart']
         if 'csrfmiddlewaretoken' in request.session['cart']:
