@@ -12,8 +12,6 @@ django-grappelli==2.5.3
 docutils==0.11
 mollie-api-python==1.0.0
 pyPdf==1.13
-pymaging==0.1
-pymaging-png==0.1
 qrcode==4.0.4
 reportlab==3.1.8
 requests==2.3.0

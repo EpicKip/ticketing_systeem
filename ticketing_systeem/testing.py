@@ -17,11 +17,15 @@ DATABASES = {
     }
 }
 
-PDF_LOCATION = '/home/ec2-user/ticketing/files'
+PDF_LOCATION = '/home/ec2-user/Sites/ticketing/files'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 ALLOWED_HOSTS = [
     'ticketing.in2systems.nl'
 ]
+
+SITE_ROOT = 'http://ticketing.in2systems.nl'
+#Mollie settings
+MOLLIE_REPORT_URL = SITE_ROOT + '/events/%s/step4'
 
 #INTERNAL_IPS = ('127.0.0.1',)

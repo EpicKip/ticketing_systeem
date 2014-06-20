@@ -1,5 +1,7 @@
 __author__ = 'Aaron'
 import os
+from PyPDF2 import PdfFileReader, PdfFileWriter
+from ticketing_systeem.base import MEDIA_URL
 import uuid
 import StringIO
 from datetime import datetime
@@ -7,6 +9,8 @@ from datetime import datetime
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from qrcode import QRCode, ERROR_CORRECT_L
 from reportlab.pdfgen import canvas
+from datetime import datetime
+from tickets.models import Order, Ticket, Terms
 from django.conf import settings
 
 from ticketing_systeem.base import MEDIA_URL
@@ -85,9 +89,9 @@ def create_pdf(name, orderid, ticketid, event, tickettype):
     qr.make(fit=True)  # Generate the QRCode itself
     # im contains a PIL.Image.Image object
     im = qr.make_image()
-    im.save(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg", 'JPEG')
-    can.drawImage("http" + MEDIA_URL + r"temp/qr/qr" + str(ticketid) + ".jpg", 150, 50, 125, 125)
-    os.remove(r"http\media\temp\qr\qr" + str(ticketid) + ".jpg")
+    im.save(os.path.join(settings.PDF_LOCATION, 'qr', "qr" + str(ticketid) + ".jpg"), 'JPEG')
+    can.drawImage(os.path.join(settings.PDF_LOCATION, 'qr', 'qr' + str(ticketid) + ".jpg"), 10, 10, 100, 100)
+    os.remove(os.path.join(settings.PDF_LOCATION, 'qr', 'qr' + str(ticketid) + ".jpg"))
     terms = Terms.objects.get(id=1).terms
     terms = terms.replace('\r\n', 'SPLIT')
     terms = terms.split("SPLIT")
@@ -100,6 +104,7 @@ def create_pdf(name, orderid, ticketid, event, tickettype):
     can.drawString(20, 120, "TicketNr: " + str(ticketid))
     can.drawString(20, 30, "Type: " + str(tickettype))
     can.line(290, 160, 290, 5)
+    can.drawString(110, 150, "")
     can.save()
     # move to the beginning of the StringIO buffer
     packet.seek(0)

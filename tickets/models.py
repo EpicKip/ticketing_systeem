@@ -48,6 +48,9 @@ class Customer(models.Model):
         verbose_name = _('customer')
         verbose_name_plural = _('customers')
 
+    def __str__(self):
+        return self.user.username
+
 
 class Event(models.Model):
     """

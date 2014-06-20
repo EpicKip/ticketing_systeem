@@ -2,13 +2,11 @@ import platform
 
 from django.core.mail import send_mail
 
-
 __author__ = 'Aaron'
-
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render_to_response
+from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from filetransfers.api import serve_file
 from tickets.models import EventTicket, Order
@@ -106,6 +104,10 @@ def step1(request, event_id):
 
 @event_active()
 def step2(request, event_id):
+    if 'error1' in request.session:
+        del request.session['error1']
+    if 'error2' in request.session:
+        del request.session['error2']
     try:
         event = Event.objects.get(id=event_id)
         eventtickets = EventTicket.objects.filter(event_id=event_id)
