@@ -81,7 +81,11 @@ def step1(request, event_id):
         return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets})
     elif request.method == 'POST':
         errors = {}
-        request.session['cart'] = request.POST.copy()
+        cart = request.POST.copy()
+        for key, value in cart.iteritems():
+            if type(value) == type(list()):
+                cart[key] = value[0]
+        request.session['cart'] = cart
         if 'csrfmiddlewaretoken' in request.session['cart']:
             del request.session['cart']['csrfmiddlewaretoken']
         negative_error, decimal_error = '', ''
@@ -121,7 +125,7 @@ def step2(request, event_id):
             total = 0
             subtotal = {}
             for eventticket in eventtickets:
-                number1 = request.session['cart'][str(eventticket.id)][0]
+                number1 = request.session['cart'][str(eventticket.id)]
                 number2 = EventTicket.objects.get(id=eventticket.id).price
                 total += float(number1) * float(number2)
                 subtotal[str(eventticket.id)] = (float(number1) * float(number2))
