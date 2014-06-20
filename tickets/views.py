@@ -137,14 +137,19 @@ def step4(request, event_id):
         # fp.close()
         # att.add_header('Content-Disposition', 'attachment', filename=filename)
         # msg.attach(att)
-        send_mail('Ticket' + Event.objects.get(id=event_id).name, 'ticketing@nationevents.nl', 'In de bijlage van'
-                                                                                               'dit bericht zult u uw'
-                                                                                               'ticket vinden in pdf '
-                                                                                               'formaat, bij enige '
-                                                                                               'problemen stuur een '
-                                                                                               'mail naar: '
-                                                                                               'SUPERNEP@fake.com',
-        [request.session['email']], fail_silently=True)
+        send_mail(
+            'Ticket' + Event.objects.get(id=event_id).name, 
+            'In de bijlage van' \
+            'dit bericht zult u uw' \
+                                                                                               'ticket vinden in pdf '\
+                                                                                               'formaat, bij enige '\
+                                                                                               'problemen stuur een '\
+                                                                                               'mail naar: '\
+                                                                                               'SUPERNEP@fake.com', 
+            'Ticketing Sales <ticketing@in2systems.nl>',
+            [request.session['email']], 
+            fail_silently=False
+        )
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:
