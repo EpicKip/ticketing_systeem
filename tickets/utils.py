@@ -38,7 +38,7 @@ def create_order(data):
 
 def create_tickets(cart, order, name, final, event):
     for ticket_type, number in cart.iteritems():
-        for index in range(0, int(number)[0]):
+        for index in range(0, int(number[0])):
             ticket = Ticket.objects.create(**{
                 'ticket_type_id': ticket_type,
                 'order_id': order.id,
