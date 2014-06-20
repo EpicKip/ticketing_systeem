@@ -81,7 +81,7 @@ def pay_report(request):
         transaction_id = request.POST.get('id')
         payment = mollie.payments.get(transaction_id)
         order_nr = payment['metadata']['order_nr']
-        print 'try ' + order_nr + 'trans: ' + transaction_id
+        print 'try ' + str(order_nr) + 'trans: ' + str(transaction_id)
         print payment.__dict__
         if payment.isPaid():
             print 'paid :O'
