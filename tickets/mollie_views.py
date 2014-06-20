@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
 from Mollie import API
+from django.views.decorators.csrf import csrf_exempt
 
 from tickets import utils
 from tickets.models import Event, Order, Customer, MollieKey
@@ -68,10 +69,12 @@ def pay(request, event_id):
         )
 
 
+@csrf_exempt
 def pay_report(request):
     """
         Is called by ideal when payment was successful
     """
+    print "PASPFPPASFNMKASNFJKASNFJKNASJKFNKJASNFKNSFKANFKSJFKNSNFNSAKFNN"
     try:
         mollie = Mollie.API.Client()
         mollie.setApiKey(MollieKey.objects.get(id=1).key)
