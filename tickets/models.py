@@ -23,7 +23,8 @@ PAYMENT_STATUS = (
     ('PAI', _('paid')),
     ('PAO', _('paidout')),
     ('REF', _('refunded')),
-    ('EXP', _('expired'))
+    ('EXP', _('expired')),
+    ('PEN', _('pending'))
 )
 
 fs = FileSystemStorage(location=settings.PDF_LOCATION)
@@ -32,28 +33,20 @@ fs = FileSystemStorage(location=settings.PDF_LOCATION)
 class Customer(models.Model):
     """
         Customer class
-            Customer has a 1 to 1 relationship with user
-            It also has a property full_name, this is used in the admin dashboard
+            Customer has a first name, last name and email adress
     """
-    user = models.OneToOneField(
-        User,
-        verbose_name=_('user'))
+    first_name = models.CharField(max_length=50, verbose_name=_('first name'))
+    last_name = models.CharField(max_length=50, verbose_name=_('last name'))
+    email = models.EmailField(max_length=50, verbose_name=_('email'))
 
     @property
     def full_name(self):
-        # try:
-        if self.user.first_name or self.user.last_name:
-            full = self.user.first_name + " " + self.user.last_name
-        else:
-            full = "(" + str(self.user) + ")"
+        full = self.first_name + " " + self.last_name
         return unicode(full)
 
     class Meta:
         verbose_name = _('customer')
         verbose_name_plural = _('customers')
-
-    def __str__(self):
-        return self.user.username
 
 
 class Event(models.Model):
@@ -133,7 +126,7 @@ class Ticket(models.Model):
         else:
             full = "(" + str(self.user) + ")"
         # except AttributeError:
-        #     full = "ErrorName"
+        # full = "ErrorName"
         return unicode(full)
 
 
@@ -195,9 +188,17 @@ class Terms(models.Model):
     """
     terms = models.TextField(max_length=300, verbose_name=_('terms'))
 
+    class Meta:
+        verbose_name = _('terms')
+        verbose_name_plural = _('terms')
 
-class Mollie_key(models.Model):
+
+class MollieKey(models.Model):
     """
-        You can save the terms and conditions here
+        You can save the Mollie key here
     """
-    key = models.CharField(max_length=300, verbose_name=_('terms'))
+    key = models.CharField(max_length=300, verbose_name=_('Mollie key'))
+
+    class Meta:
+        verbose_name = _('Mollie key')
+        verbose_name_plural = _('Mollie keys')

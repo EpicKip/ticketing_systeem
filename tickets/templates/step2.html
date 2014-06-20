@@ -20,8 +20,8 @@
         </div>
     </div>
     <hr>
- {% if error1 != "" or error2 != "" %}
-        <p class="text-danger">{{ error1 }} <br /> {{ error2 }}</p>
+    {% if error %}
+        <p class="text-danger">{% for  key,value in error.items %} <br />{{ value }}{% endfor %}</p>
     {% endif %}
     <div id="Order">
         <form method="post" action="{% url 'step2' event.id %}">
@@ -32,29 +32,33 @@
             <input class="form-control noBlock" name="last_name" id="last_name" value="{{ user.last_name }}"><br/>
             <label class="Order-label" for="email">Email: </label>
             <input class="form-control noBlock" name="email" id="email" value="{{ user.email }}"><br/>
-    <p>Huidige winkelmand:</p>
-    <table class="table table-bordered table-responsive">
-        <tr>
-            <td><b>Product:</b></td>
-            <td><b>aantal:</b></td>
-            <td><b>Prijs:</b></td>
-        </tr>
-        {% for item in cart %}
-            <tr>
-                <td>{% get_ticket_from_session_name item %}</td>
-                <td>{{ cart|get_item:item }}</td>
-                <td>€ {{ subtotal|get_item:item|floatformat:-2 }}</td>
-            </tr>
-        {% endfor %}
-        <tr class="tr">
-            <td class="td" colspan="2">Totaal:</td>
-            <td class="td">€ {{ total|floatformat:-2 }}</td>
-        </tr>
-    </table>
+
+            <p>Huidige winkelmand:</p>
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <td><b>Product:</b></td>
+                    <td><b>aantal:</b></td>
+                    <td><b>Prijs:</b></td>
+                </tr>
+                {% for item in cart %}
+                    <tr>
+                        <td>{% get_ticket_from_session_name item %}</td>
+                        <td>{{ cart|get_item:item }}</td>
+                        <td>€ {{ subtotal|get_item:item|floatformat:-2 }}</td>
+                    </tr>
+                {% endfor %}
+                <tr class="tr">
+                    <td class="td" colspan="2">Totaal:</td>
+                    <td class="td">€ {{ total|floatformat:-2 }}</td>
+                </tr>
+            </table>
             <div class="center margin_terms"><label>
-                <input name="terms" type="checkbox" class="checkbox-inline {% if form.fieldname.errors %}has-error{% endif %}">
+                <input name="terms" type="checkbox"
+                       class="checkbox-inline {% if form.fieldname.errors %}has-error{% endif %}">
             </label>
-                Ik ga akkoord met de <a onclick="window.open('/termsandconditions', 'newwindow', 'width=300, height=250'); return false;">algemene voorwaarden</a><br/>
+                Ik ga akkoord met de <a
+                        onclick="window.open('/termsandconditions', 'newwindow', 'width=300, height=250'); return false;">algemene
+                    voorwaarden</a><br/>
                 <a class="btn center btn-lg btn-warning" onclick="javascript:history.go(-1)">Vorige stap</a>
                 <button type="submit" class="center btn btn-lg">
 

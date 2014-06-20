@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-27 16:36+0100\n"
+"POT-Creation-Date: 2014-06-20 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,134 +18,266 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: dashboard.py:26
+#: .\dashboard.py:21
 msgid "Ticketing"
 msgstr "Ticketing"
 
-#: dashboard.py:36
+#: .\dashboard.py:30
 msgid "Users"
 msgstr "Gebruikers"
 
-#: dashboard.py:44
+#: .\dashboard.py:39
 msgid "Recent changes"
 msgstr "Recente aanpassingen"
 
-#: tickets/models.py:10
+#: .\tickets\admin.py:43
+#, python-format
+msgid "The generated password is: %s"
+msgstr ""
+
+#: .\tickets\forms.py:17
+#, fuzzy
+msgid "User"
+msgstr "Gebruikers"
+
+#: .\tickets\forms.py:18
+#, fuzzy
+msgid "Username"
+msgstr "naam"
+
+#: .\tickets\forms.py:19
+msgid "First name"
+msgstr ""
+
+#: .\tickets\forms.py:20
+#, fuzzy
+msgid "Last name"
+msgstr "naam"
+
+#: .\tickets\forms.py:21
+msgid "Email"
+msgstr ""
+
+#: .\tickets\forms.py:59
+msgid "The desired username is already in use"
+msgstr "De gewenste gebruikernaam is al in gebruik"
+
+#: .\tickets\forms.py:62
+msgid "You have to provide an email address if you make a new user"
+msgstr ""
+"U moet een email adress bijvoegen als u een nieuwe gebruiker wilt maken"
+
+#: .\tickets\forms.py:68
+msgid "You can't edit users from the list box"
+msgstr "U kunt geen gebruikers uit de dropdown bewerken"
+
+#: .\tickets\forms.py:71
+msgid "Choose a user from the list box OR make a new user"
+msgstr "Kies een gebruiker uit de dropdown OF maak een nieuwe gebruiker"
+
+#: .\tickets\models.py:15
 msgid "Organizer"
 msgstr "Organisator"
 
-#: tickets/models.py:11
+#: .\tickets\models.py:16
 msgid "Moderator"
 msgstr "Moderator"
 
-#: tickets/models.py:12
+#: .\tickets\models.py:17
 msgid "Scanner"
 msgstr "Scanner"
 
-#: tickets/models.py:24 tickets/models.py:107
-msgid "user"
-msgstr "gebruiker"
+#: .\tickets\models.py:21
+msgid "open"
+msgstr "open"
 
-#: tickets/models.py:30 tickets/models.py:88
+#: .\tickets\models.py:22
+msgid "cancelled"
+msgstr "geannuleerd"
+
+#: .\tickets\models.py:23
+msgid "paid"
+msgstr "betaald"
+
+#: .\tickets\models.py:24
+msgid "paidout"
+msgstr "uitgekeerd"
+
+#: .\tickets\models.py:25
+msgid "refunded"
+msgstr "terugbetaald"
+
+#: .\tickets\models.py:26
+msgid "expired"
+msgstr "verlopen"
+
+#: .\tickets\models.py:27
+msgid "pending"
+msgstr "bezit"
+
+#: .\tickets\models.py:39 .\tickets\models.py:140
+msgid "first name"
+msgstr "voornaam"
+
+#: .\tickets\models.py:40 .\tickets\models.py:141
+#, fuzzy
+msgid "last name"
+msgstr "achternaam"
+
+#: .\tickets\models.py:41 .\tickets\models.py:142
+msgid "email"
+msgstr ""
+
+#: .\tickets\models.py:49
 msgid "customer"
 msgstr "klant"
 
-#: tickets/models.py:31
+#: .\tickets\models.py:50
 msgid "customers"
 msgstr "klanten"
 
-#: tickets/models.py:38 tickets/models.py:49
-msgid "Text"
-msgstr "Tekst"
-
-#: tickets/models.py:41 tickets/models.py:72
-msgid "event template"
-msgstr "evenement template"
-
-#: tickets/models.py:42
-msgid "event templates"
-msgstr "evenement templates"
-
-#: tickets/models.py:52 tickets/models.py:90
-msgid "ticket template"
-msgstr "ticket template"
-
-#: tickets/models.py:53
-msgid "ticket templates"
-msgstr "ticket templates"
-
-#: tickets/models.py:61
+#: .\tickets\models.py:63 .\tickets\models.py:90
 msgid "name"
 msgstr "naam"
 
-#: tickets/models.py:62
+#: .\tickets\models.py:64
 msgid "location"
 msgstr "locatie"
 
-#: tickets/models.py:63
-msgid "date"
-msgstr "datum"
-
-#: tickets/models.py:64
+#: .\tickets\models.py:65
 msgid "start time"
 msgstr "start tijd"
 
-#: tickets/models.py:65
+#: .\tickets\models.py:66
 msgid "end time"
 msgstr "eind tijd"
 
-#: tickets/models.py:66
-msgid "sales start"
-msgstr "verkoop start"
-
-#: tickets/models.py:67
-msgid "sales end"
-msgstr "verkoop eind"
-
-#: tickets/models.py:68
+#: .\tickets\models.py:67
 msgid "event active"
 msgstr "evenement actief"
 
-#: tickets/models.py:69
-msgid "price"
-msgstr "prijs"
-
-#: tickets/models.py:70
-msgid "maximum"
-msgstr "maximum"
-
-#: tickets/models.py:71
+#: .\tickets\models.py:68 .\tickets\models.py:94
 msgid "information"
 msgstr "informatie"
 
-#: tickets/models.py:78 tickets/models.py:89
+#: .\tickets\models.py:69
+msgid "logo"
+msgstr ""
+
+#: .\tickets\models.py:70
+msgid "ticket template"
+msgstr "ticket template"
+
+#: .\tickets\models.py:74
+msgid "The start of the event can't be after the end..."
+msgstr "Het evenement kan niet beginnen nadat het eindigt"
+
+#: .\tickets\models.py:80 .\tickets\models.py:91 .\tickets\models.py:160
 msgid "event"
 msgstr "evenement"
 
-#: tickets/models.py:79
+#: .\tickets\models.py:81
 msgid "events"
 msgstr "evenementen"
 
-#: tickets/models.py:87
+#: .\tickets\models.py:92
+msgid "price"
+msgstr "prijs"
+
+#: .\tickets\models.py:93
+msgid "maximum"
+msgstr "maximum"
+
+#: .\tickets\models.py:100 .\tickets\models.py:112
+#, fuzzy
+msgid "ticket type"
+msgstr "ticket template"
+
+#: .\tickets\models.py:101
+#, fuzzy
+msgid "ticket types"
+msgstr "ticket templates"
+
+#: .\tickets\models.py:111
 msgid "ticket active"
 msgstr "ticket actief"
 
-#: tickets/models.py:96
+#: .\tickets\models.py:113
+msgid "order"
+msgstr ""
+
+#: .\tickets\models.py:119
 msgid "ticket"
 msgstr "ticket"
 
-#: tickets/models.py:97
+#: .\tickets\models.py:120
 msgid "tickets"
 msgstr "tickets"
 
-#: tickets/models.py:111
+#: .\tickets\models.py:143
+#, fuzzy
+msgid "date time"
+msgstr "start tijd"
+
+#: .\tickets\models.py:144
+msgid "payment status"
+msgstr "betalings status"
+
+#: .\tickets\models.py:145
+msgid "raw order"
+msgstr "ruwe bestelling"
+
+#: .\tickets\models.py:146
+msgid "total"
+msgstr "totaal"
+
+#: .\tickets\models.py:147
+msgid "pdf"
+msgstr ""
+
+#: .\tickets\models.py:159
+msgid "user"
+msgstr "gebruiker"
+
+#: .\tickets\models.py:164
 msgid "staff type"
 msgstr "personeels type"
 
-#: tickets/models.py:128
+#: .\tickets\models.py:182
 msgid "staff member"
 msgstr "personeels lid"
 
-#: tickets/models.py:129
+#: .\tickets\models.py:183
 msgid "staff members"
 msgstr "personeels leden"
+
+#: .\tickets\models.py:190 .\tickets\models.py:193 .\tickets\models.py:194
+#: .\tickets\models.py:201
+msgid "terms"
+msgstr "algemene voorwaarden"
+
+#: .\tickets\models.py:204
+msgid "Mollie key"
+msgstr ""
+
+#: .\tickets\models.py:205
+msgid "Mollie keys"
+msgstr ""
+
+#~ msgid "Text"
+#~ msgstr "Tekst"
+
+#~ msgid "event template"
+#~ msgstr "evenement template"
+
+#~ msgid "event templates"
+#~ msgstr "evenement templates"
+
+#~ msgid "date"
+#~ msgstr "datum"
+
+#~ msgid "sales start"
+#~ msgstr "verkoop start"
+
+#~ msgid "sales end"
+#~ msgstr "verkoop eind"

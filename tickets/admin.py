@@ -1,19 +1,20 @@
 __author__ = 'aaron'
 
 from django.contrib import admin
-from tickets.models import *
-from forms import *
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
+from tickets.models import *
+from forms import *
+
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'full_name')
-    search_fields = ['id', 'user__first_name', 'user__last_name', 'user__username']
+    list_display = ('id', 'full_name', 'email')
+    search_fields = ['id', 'first_name', 'last_name', 'email']
 
     @staticmethod
     def full_name(instance):
-        return instance.user.first_name + " " + instance.user.last_name
+        return instance.first_name + " " + instance.last_name
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -23,8 +24,7 @@ class EventAdmin(admin.ModelAdmin):
 
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('id', 'ticket_type', 'event_name', 'order')
-    search_fields = ['id', 'order__id',#'event__name'
-    ]
+    search_fields = ['id', 'order__id', 'ticket_type__event__name']
 
     @staticmethod
     def event_name(instance):
@@ -58,6 +58,7 @@ class TermsAdmin(admin.ModelAdmin):
 class MollieKeyAdmin(admin.ModelAdmin):
     list_display = ('key',)
 
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
@@ -65,4 +66,4 @@ admin.site.register(StaffMember, StaffMemberAdmin)
 admin.site.register(EventTicket, EventTicketAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Terms, TermsAdmin)
-admin.site.register(Mollie_key, MollieKeyAdmin)
+admin.site.register(MollieKey, MollieKeyAdmin)

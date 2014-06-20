@@ -1,14 +1,16 @@
 __author__ = 'Aaron'
 import os
-from PyPDF2 import PdfFileReader, PdfFileWriter
-from ticketing_systeem.base import MEDIA_URL
 import uuid
 import StringIO
+from datetime import datetime
+
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from qrcode import QRCode, ERROR_CORRECT_L
 from reportlab.pdfgen import canvas
-from datetime import datetime
-from tickets.models import Order, Ticket, Terms
 from django.conf import settings
+
+from ticketing_systeem.base import MEDIA_URL
+from tickets.models import Order, Ticket, Terms
 
 
 def password_random(string_length):
@@ -37,40 +39,40 @@ def create_order(data):
 
 def create_tickets(cart, order, name, final, event):
     for ticket_type, number in cart.iteritems():
-                for index in range(0, int(number)):
-                    ticket = Ticket.objects.create(**{
-                        'ticket_type_id': ticket_type,
-                        'order_id': order.id,
-                    })
-                    # # create a new PDF with Reportlab
-                    # output = PdfFileWriter()
-                    # qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50,
-                    # border=4,)
-                    # packet = StringIO.StringIO()
-                    # qr.add_data(uuid.uuid4())
-                    # qr.make(fit=True)
-                    # img = qr.make_image()
-                    # img.save(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 'JPEG')
-                    # can = canvas.Canvas(packet)
-                    # can.drawImage(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 10, 10, 100, 100)
-                    # can.drawString(40, 150, "Terms :P" + str(name) + "ORDER:" + str(order.id) + "TICKET:" +
-                    #                         str(ticket.id))
-                    # can.save()
-                    # # read your existing PDF
-                    # page = existing_pdf.getPage(0)
-                    # packet.seek(0)
-                    # new_pdf = PdfFileReader(packet)
-                    # page.mergePage(new_pdf.getPage(0))
-                    # output.addPage(page)
-                    # page = output.getPage(0)
-                    # final.addPage(page)
-                    # final = PdfFileWriter()
-                    output = create_pdf(name, order.id, ticket.id, event, ticket.ticket_type.name)
-                    page = output.getPage(0)
-                    final.addPage(page)
-                    output_stream = file(os.path.join(settings.PDF_LOCATION, "pdf", "order" + str(order.id) + ".pdf"), "wb")
-                    final.write(output_stream)
-                    output_stream.close()
+        for index in range(0, int(number)):
+            ticket = Ticket.objects.create(**{
+                'ticket_type_id': ticket_type,
+                'order_id': order.id,
+            })
+            # # create a new PDF with Reportlab
+            # output = PdfFileWriter()
+            # qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50,
+            # border=4,)
+            # packet = StringIO.StringIO()
+            # qr.add_data(uuid.uuid4())
+            # qr.make(fit=True)
+            # img = qr.make_image()
+            # img.save(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 'JPEG')
+            # can = canvas.Canvas(packet)
+            # can.drawImage(r"C:\Users\Aaron\Desktop\tickets\QR\qr.jpg", 10, 10, 100, 100)
+            # can.drawString(40, 150, "Terms :P" + str(name) + "ORDER:" + str(order.id) + "TICKET:" +
+            # str(ticket.id))
+            # can.save()
+            # # read your existing PDF
+            # page = existing_pdf.getPage(0)
+            # packet.seek(0)
+            # new_pdf = PdfFileReader(packet)
+            # page.mergePage(new_pdf.getPage(0))
+            # output.addPage(page)
+            # page = output.getPage(0)
+            # final.addPage(page)
+            # final = PdfFileWriter()
+            output = create_pdf(name, order.id, ticket.id, event, ticket.ticket_type.name)
+            page = output.getPage(0)
+            final.addPage(page)
+            output_stream = file(os.path.join(settings.PDF_LOCATION, "pdf", "order" + str(order.id) + ".pdf"), "wb")
+            final.write(output_stream)
+            output_stream.close()
     return final
 
 
@@ -78,7 +80,7 @@ def create_pdf(name, orderid, ticketid, event, tickettype):
     packet = StringIO.StringIO()
     # create a new PDF with Reportlab
     can = canvas.Canvas(packet)
-    qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50, border=4,)
+    qr = QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=50, border=4, )
     qr.add_data(uuid.uuid4())
     qr.make(fit=True)  # Generate the QRCode itself
     # im contains a PIL.Image.Image object
@@ -99,7 +101,7 @@ def create_pdf(name, orderid, ticketid, event, tickettype):
     can.drawString(20, 30, "Type: " + str(tickettype))
     can.line(290, 160, 290, 5)
     can.save()
-    #move to the beginning of the StringIO buffer
+    # move to the beginning of the StringIO buffer
     packet.seek(0)
     new_pdf = PdfFileReader(packet)
     # read your existing PDF

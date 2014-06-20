@@ -20,22 +20,23 @@
         </div>
     </div>
     <hr>
-    {% if error1 != "" or error2 != "" %}
-        <p class="text-danger">{{ error1 }} <br /> {{ error2 }}</p>
+    {% if error %}
+        <p class="text-danger">{% for  key,value in error.items %} <br />{{ value }}{% endfor %}</p>
     {% endif %}
     <form name="tickets" method="post" action="{% url 'step1' event.id %}">
-    {% csrf_token %}
+        {% csrf_token %}
         <table class="table">
-        <td><b>Aantal:</b></td>
-        <td><b>Product:</b></td>
-        <td><b>Prijs:</b></td>
-        <td><b>Totaal:</b></td>
+            <td><b>Aantal:</b></td>
+            <td><b>Product:</b></td>
+            <td><b>Prijs:</b></td>
+            <td><b>Totaal:</b></td>
             {% for eventticket in eventtickets %}
                 <tr>
                     <td>
                         <label>
-                            <input name="{{ eventticket.id }}" id="{{ eventticket.id }}" data-price="{{ eventticket.price }}"
-                                            class="input-sm" type="text" value="0"/>
+                            <input name="{{ eventticket.id }}" id="{{ eventticket.id }}"
+                                   data-price="{{ eventticket.price }}"
+                                   class="input-sm" type="text" value="0"/>
                         </label>
                     </td>
                     <td>
@@ -57,7 +58,7 @@
             </tr>
 
         </table>
-<button class="btn-lg btn centerMargin">Volgende</button>
+        <button class="btn-lg btn centerMargin">Volgende</button>
     </form>
 
 

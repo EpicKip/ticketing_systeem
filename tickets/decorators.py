@@ -1,6 +1,8 @@
 __author__ = 'Aaron'
-from django.shortcuts import render
 from functools import wraps
+
+from django.shortcuts import render
+
 from tickets.models import Event
 
 
@@ -12,5 +14,7 @@ def event_active():
                 return func(request, *args, **kwargs)
             else:
                 return render(request, "inactive.html")
+
         return wraps(func)(inner_decorator)
+
     return decorator

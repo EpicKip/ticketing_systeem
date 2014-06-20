@@ -2,10 +2,11 @@ __author__ = 'Aaron'
 
 from django import forms
 from django.contrib.auth.models import User
-from tickets.models import StaffMember
 from django.utils.translation import ugettext_lazy as _
-from utils import password_random
 from django.contrib.auth.hashers import make_password
+
+from tickets.models import StaffMember
+from utils import password_random
 
 
 class StaffMemberForm(forms.ModelForm):
@@ -27,7 +28,7 @@ class StaffMemberForm(forms.ModelForm):
         fields = ('staff_type', 'event')
 
     def clean(self):
-        #All fields are checked for errors like:
+        # All fields are checked for errors like:
         #Does a user exist already, did they fill in required fields and did they leave fields empty if they
         #chose a user from the drop down menu
         if self.errors:
@@ -92,7 +93,7 @@ class StaffMemberForm(forms.ModelForm):
             staff_member.user = user
 
             # body =      _('Dear user, someone has created an account for you at'
-            #             ' the nation events ticketing admin panel.\n'
+            # ' the nation events ticketing admin panel.\n'
             #             'They assigned you staff at one of their events.\n'
             #             'Here is your username and password:\n'
             #             'Username: %s\n'

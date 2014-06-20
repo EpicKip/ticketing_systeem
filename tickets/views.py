@@ -1,3 +1,6 @@
+import platform
+from django.core.mail import send_mail
+
 __author__ = 'Aaron'
 
 from django.core.urlresolvers import reverse
@@ -73,10 +76,11 @@ def step1(request, event_id):
         eventtickets = EventTicket.objects.filter(event_id=event_id)
     except Event.DoesNotExist:
         return render(request, "inactive.html")
-    #Checking if user is GETting or POSTing
+    # Checking if user is GETting or POSTing
     if request.method == 'GET':
         return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets})
     elif request.method == 'POST':
+        errors = {}
         request.session['cart'] = request.POST.copy()
         if 'csrfmiddlewaretoken' in request.session['cart']:
             del request.session['cart']['csrfmiddlewaretoken']
@@ -84,19 +88,18 @@ def step1(request, event_id):
         for eventticket in eventtickets:
             number1 = request.session['cart'][str(eventticket.id)]
             if "-" in str(number1):
-                negative_error = "U kunt geen negatief aantal tickets bestellen."
+                errors['negative_error'] = "U kunt geen negatief aantal tickets bestellen."
             if float(number1.replace(',', '.')).is_integer() is False:
-                decimal_error = "U kunt alleen een geheel getal aan tickets bestellen."
-        if negative_error == '' and decimal_error == '':
+                errors['decimal_error'] = "U kunt alleen een geheel getal aan tickets bestellen."
+        if not errors:
             if all(val[0] == u'0' for val in request.session['cart'].values()):
-                no_ticket_error = 'U moet minimaal 1 ticket bestellen'
+                errors['no_ticket'] = 'U moet minimaal 1 ticket bestellen'
                 return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets,
-                                                      'error1': no_ticket_error})
+                                                      'error': errors})
             else:
                 return HttpResponseRedirect(reverse('step2', args=event_id))
         else:
-            return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets, 'error1': decimal_error,
-                                                  'error2': negative_error})
+            return render(request, 'step1.html', {'event': event, 'eventtickets': eventtickets, 'error': errors})
 
 
 @event_active()
@@ -106,7 +109,7 @@ def step2(request, event_id):
         eventtickets = EventTicket.objects.filter(event_id=event_id)
     except Event.DoesNotExist:
         return render(request, "inactive.html")
-    #Checking if user is GETting or POSTing
+    # Checking if user is GETting or POSTing
     if request.method == 'GET':
         if 'cart' not in request.session:
             return HttpResponseRedirect(reverse('step1', args=event_id))
@@ -121,35 +124,37 @@ def step2(request, event_id):
             request.session['total'] = total
             request.session['subtotal'] = subtotal
             return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
-                                                'cart': request.session.get('cart'),
-                                                'subtotal': subtotal,
-                                                'total': total})
+                                                  'cart': request.session.get('cart'),
+                                                  'subtotal': subtotal,
+                                                  'total': total})
     elif request.method == 'POST':
-        mail_error = ""
-        check_error = ""
+        errors = {}
         if request.POST.get('email') is u'':
-            mail_error = "U moet uw email invullen"
-            request.session['error1'] = mail_error
+            errors['email'] = "U moet uw email invullen"
+        if request.POST.get('first_name') is u'':
+            errors['first_name'] = "U moet uw voornaam invullen"
+        if request.POST.get('last_name') is u'':
+            errors['last_name'] = "U moet uw achternaam invullen"
         request.session['email'] = request.POST.get('email')
         request.session['first_name'] = request.POST.get('first_name')
         request.session['last_name'] = request.POST.get('last_name')
         if request.POST.get('terms') is None:
-            check_error = "U moet akkoord gaan met de terms en conditions"
-            request.session['error2'] = check_error
-        if 'error1' in request.session or 'error2' in request.session:
+            errors['check'] = "U moet akkoord gaan met de algemene voorwaarden"
+        if errors:
             return render(request, 'step2.html', {'event': event, 'eventtickets': eventtickets,
-                                                'cart': request.session.get('cart'),
-                                                'subtotal': request.session['subtotal'],
-                                                'total': request.session['total'],
-                                                'error1': request.session['error1'],
-                                                'error2': request.session['error2']})
+                                                  'cart': request.session.get('cart'),
+                                                  'subtotal': request.session['subtotal'],
+                                                  'total': request.session['total'],
+                                                  'error': errors})
         else:
             return HttpResponseRedirect(reverse('step3', args=event_id))
 
 
 @event_active()
 def step4(request, event_id):
-    if 1 == 1:
+    order = Order.objects.get(id=request.session['order'])
+    server_name = platform.node().split('.')[0]
+    if order.payment_status == 'PAI' or server_name == 'PETERPC':
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:
@@ -157,15 +162,26 @@ def step4(request, event_id):
         if request.method == 'GET':
             return render(request, 'step4.html', {'event': event, 'email': request.session['email']})
         if request.method == 'POST':
-            mail_error = ''
-            if request.POST.get('mail') == '':
-                mail_error = 'U moet uw email invullen'
-            if 'mail_error' is '':
-                return render(request, 'step4.html', {'event': event,
-                                                'cart': request.session.get('cart'),
-                                                'email': request.session['email']})
+            errors = {}
+            if request.POST.get('email') == '':
+                errors['email'] = 'U moet uw email invullen'
             else:
-                return render(request, 'step4.html', {'event': event, 'error1': mail_error})
+                request.session['email'] = request.POST.get('email')
+                send_mail('Ticket' + Event.objects.get(id=request.session['event']).name, 'In de bijlage van'
+                                                                                          'dit bericht zult u uw'
+                                                                                          'ticket vinden in pdf '
+                                                                                          'formaat, bij enige '
+                                                                                          'problemen stuur een '
+                                                                                          'mail naar: '
+                                                                                          'SUPERNEP@fake.com',
+                          'ticketing@in2systems.nl',
+                          [request.session['email']], fail_silently=True)
+            if not errors:
+                return render(request, 'step4.html', {'event': event,
+                                                      'cart': request.session.get('cart'),
+                                                      'email': request.session['email']})
+            else:
+                return render(request, 'step4.html', {'event': event, 'error': errors})
 
 
 def register(request):

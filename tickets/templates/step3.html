@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 {% block body %}
     <div class="step">
-<div class="step-div">
-        <div class="step-top">Stap 1</div>
-        <div class="step-description">Ticket</div>
-    </div>
-    <div class="step-div">
-        <div class="step-top">Stap 2</div>
-        <div class="step-description">Gebruiker</div>
-    </div>
-    <div class="step-active">
-        <div class="step-top">Stap 3</div>
-        <div class="step-description">Betaling</div>
-    </div>
-    <div class="step-div step-last">
-        <div class="step-top">Stap 4</div>
-        <div class="step-description">Download</div>
-    </div>
+        <div class="step-div">
+            <div class="step-top">Stap 1</div>
+            <div class="step-description">Ticket</div>
         </div>
-<hr>
+        <div class="step-div">
+            <div class="step-top">Stap 2</div>
+            <div class="step-description">Gebruiker</div>
+        </div>
+        <div class="step-active">
+            <div class="step-top">Stap 3</div>
+            <div class="step-description">Betaling</div>
+        </div>
+        <div class="step-div step-last">
+            <div class="step-top">Stap 4</div>
+            <div class="step-description">Download</div>
+        </div>
+    </div>
+    <hr>
     <form method="post" class="center" action="{% url 'step3' event.id %}">
-    {% csrf_token %}
-    <label for="bank">Selecteer uw bank: </label>
-    <select class="form-control-static" name="bank" id="bank">
-    {% for bank in banks %}
-        {% if bank.method == 'ideal' %}
-            <option class="dropdown" value="{{ bank.id }}">
-                {{ bank.name }}
-            </option>
-        {% endif %}
-    {% endfor %}
-    </select>
-    <button class="btn-lg btn" type="submit">Betalen</button>
+        {% csrf_token %}
+        <label for="bank">Selecteer uw bank: </label>
+        <select class="form-control-static" name="bank" id="bank">
+            {% for bank in banks %}
+                {% if bank.method == 'ideal' %}
+                    <option class="dropdown" value="{{ bank.id }}">
+                        {{ bank.name }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button class="btn-lg btn" type="submit">Betalen</button>
     </form>
 {% endblock %}
