@@ -38,11 +38,6 @@ def pay(request, event_id):
                 'email': request.session['email'], 'cart': request.session['cart'],
                 'total': request.session['total'], 'event': Event.objects.get(id=event_id)}
         order = utils.create_order(data)
-        Customer.objects.get_or_create(**{
-            'first_name': request.session['first_name'],
-            'last_name': request.session['last_name'],
-            'email': request.session['email']
-        })
         request.session['order'] = order.id
         request.session['event'] = event_id
         bank = request.POST.get('bank')

@@ -6,7 +6,7 @@ __author__ = 'Aaron'
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from filetransfers.api import serve_file
 from tickets.models import EventTicket, Order

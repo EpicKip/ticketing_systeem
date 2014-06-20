@@ -82,7 +82,7 @@ LOCALE_PATHS = (
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'nl-nl'
+LANGUAGE_CODE = 'nl-NL'
 
 
 TIME_ZONE = 'Europe/Amsterdam'
