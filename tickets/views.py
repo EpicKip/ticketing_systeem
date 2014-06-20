@@ -126,7 +126,7 @@ def step2(request, event_id):
             total = 0
             subtotal = {}
             for eventticket in eventtickets:
-                number1 = request.session['cart'][str(eventticket.id)]
+                number1 = request.session['cart'][str(eventticket.id)][0]
                 number2 = EventTicket.objects.get(id=eventticket.id).price
                 total += float(number1) * float(number2)
                 subtotal[str(eventticket.id)] = (float(number1) * float(number2))
