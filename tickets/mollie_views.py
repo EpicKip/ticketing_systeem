@@ -74,15 +74,16 @@ def pay_report(request):
     """
         Is called by ideal when payment was successful
     """
-    print "PASPFPPASFNMKASNFJKASNFJKNASJKFNKJASNFKNSFKANFKSJFKNSNFNSAKFNN"
     try:
         mollie = Mollie.API.Client()
         mollie.setApiKey(MollieKey.objects.get(id=1).key)
         transaction_id = request.POST.get('id')
         payment = mollie.payments.get(transaction_id)
         order_nr = payment['metadata']['order_nr']
-
+        print 'try ' + order_nr + 'trans: ' + transaction_id
+        print payment.__dict__
         if payment.isPaid():
+            print 'paid :O'
             #
             # At this point you'd probably want to start the process of delivering the product to the customer.
             #
@@ -108,6 +109,7 @@ def pay_report(request):
             #
             # The payment has started but is not complete yet.
             #
+            print 'pend'
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'PEN'
             order.save()
@@ -116,6 +118,7 @@ def pay_report(request):
             #
             # The payment has not started yet. Wait for it.
             #
+            print 'open'
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'OPE'
             order.save()
@@ -124,10 +127,12 @@ def pay_report(request):
             #
             # The payment isn't paid, pending nor open. We can assume it was aborted.
             #
+            print 'canc'
             order = Order.objects.get(id=order_nr)
             order.payment_status = 'CAN'
             order.save()
             return HttpResponse('Cancelled')
 
     except API.Error as e:
+        print e
         return HttpResponse('API call failed: ' + e.message)
