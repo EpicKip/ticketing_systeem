@@ -21,7 +21,7 @@
     </div>
     <hr>
     {% if error %}
-        <p class="text-danger">{% for  key,value in error.items %} <br />{{ value }}{% endfor %}</p>
+        <p class="text-danger">{% for  key,value in error.items %} <br/>{{ value }}{% endfor %}</p>
     {% endif %}
     <form name="tickets" method="post" action="{% url 'step1' event.id %}">
         {% csrf_token %}

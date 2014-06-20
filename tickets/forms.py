@@ -29,7 +29,7 @@ class StaffMemberForm(forms.ModelForm):
 
     def clean(self):
         # All fields are checked for errors like:
-        #Does a user exist already, did they fill in required fields and did they leave fields empty if they
+        # Does a user exist already, did they fill in required fields and did they leave fields empty if they
         #chose a user from the drop down menu
         if self.errors:
             return self.cleaned_data
@@ -94,7 +94,7 @@ class StaffMemberForm(forms.ModelForm):
 
             # body =      _('Dear user, someone has created an account for you at'
             # ' the nation events ticketing admin panel.\n'
-            #             'They assigned you staff at one of their events.\n'
+            # 'They assigned you staff at one of their events.\n'
             #             'Here is your username and password:\n'
             #             'Username: %s\n'
             #             'Password: %s'

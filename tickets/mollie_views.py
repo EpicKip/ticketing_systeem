@@ -1,5 +1,6 @@
 import Mollie
 from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -38,9 +39,9 @@ def pay(request, event_id):
                 'total': request.session['total'], 'event': Event.objects.get(id=event_id)}
         order = utils.create_order(data)
         Customer.objects.get_or_create(**{
-                'first_name': request.session['first_name'],
-                'last_name': request.session['last_name'],
-                'email': request.session['email']
+            'first_name': request.session['first_name'],
+            'last_name': request.session['last_name'],
+            'email': request.session['email']
         })
         request.session['order'] = order.id
         request.session['event'] = event_id
@@ -59,6 +60,8 @@ def pay(request, event_id):
 
         return HttpResponseRedirect(payment.getPaymentUrl())
     else:
+        if 'cart' not in request.session:
+            return HttpResponseRedirect(reverse('step1', args=event_id))
         banks = mollie.issuers.all()
         return render_to_response(
             'step3.html', {
@@ -76,7 +79,7 @@ def pay_report(request):
     """
     try:
         mollie = Mollie.API.Client()
-        mollie.setApiKey(Mollie_key.objects.get(id=1).key)
+        mollie.setApiKey(MollieKey.objects.get(id=1).key)
         transaction_id = request.POST.get('id')
         payment = mollie.payments.get(transaction_id)
         order_nr = payment['metadata']['order_nr']

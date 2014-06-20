@@ -1,5 +1,7 @@
 import platform
+
 from django.core.mail import send_mail
+
 
 __author__ = 'Aaron'
 
@@ -152,36 +154,38 @@ def step2(request, event_id):
 
 @event_active()
 def step4(request, event_id):
-    order = Order.objects.get(id=request.session['order'])
-    server_name = platform.node().split('.')[0]
-    if order.payment_status == 'PAI' or server_name == 'PETERPC':
-        try:
-            event = Event.objects.get(id=event_id)
-        except Event.DoesNotExist:
-            return render(request, "inactive.html")
-        if request.method == 'GET':
+    try:
+        event = Event.objects.get(id=event_id)
+    except Event.DoesNotExist:
+        return render(request, "inactive.html")
+    if request.method == 'GET':
+        if 'cart' not in request.session:
+            return HttpResponseRedirect(reverse('step1', args=event_id))
+        order = Order.objects.get(id=request.session['order'])
+        server_name = platform.node().split('.')[0]
+        if order.payment_status == 'PAI' or server_name == 'PETERPC':
             return render(request, 'step4.html', {'event': event, 'email': request.session['email']})
-        if request.method == 'POST':
-            errors = {}
-            if request.POST.get('email') == '':
-                errors['email'] = 'U moet uw email invullen'
-            else:
-                request.session['email'] = request.POST.get('email')
-                send_mail('Ticket' + Event.objects.get(id=request.session['event']).name, 'In de bijlage van'
-                                                                                          'dit bericht zult u uw'
-                                                                                          'ticket vinden in pdf '
-                                                                                          'formaat, bij enige '
-                                                                                          'problemen stuur een '
-                                                                                          'mail naar: '
-                                                                                          'SUPERNEP@fake.com',
-                          'ticketing@in2systems.nl',
-                          [request.session['email']], fail_silently=True)
-            if not errors:
-                return render(request, 'step4.html', {'event': event,
-                                                      'cart': request.session.get('cart'),
-                                                      'email': request.session['email']})
-            else:
-                return render(request, 'step4.html', {'event': event, 'error': errors})
+    if request.method == 'POST':
+        errors = {}
+        if request.POST.get('email') == '':
+            errors['email'] = 'U moet uw email invullen'
+        else:
+            request.session['email'] = request.POST.get('email')
+            send_mail('Ticket' + Event.objects.get(id=request.session['event']).name, 'In de bijlage van'
+                                                                                      'dit bericht zult u uw'
+                                                                                      'ticket vinden in pdf '
+                                                                                      'formaat, bij enige '
+                                                                                      'problemen stuur een '
+                                                                                      'mail naar: '
+                                                                                      'SUPERNEP@fake.com',
+                      'ticketing@in2systems.nl',
+                      [request.session['email']], fail_silently=True)
+        if not errors:
+            return render(request, 'step4.html', {'event': event,
+                                                  'cart': request.session.get('cart'),
+                                                  'email': request.session['email']})
+        else:
+            return render(request, 'step4.html', {'event': event, 'error': errors})
 
 
 def register(request):

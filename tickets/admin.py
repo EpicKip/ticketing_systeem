@@ -2,7 +2,6 @@ __author__ = 'aaron'
 
 from django.contrib import admin
 from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
 
 from tickets.models import *
 from forms import *

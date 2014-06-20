@@ -21,7 +21,7 @@
     </div>
     <hr>
     {% if error %}
-        <p class="text-danger">{% for  key,value in error.items %} <br />{{ value }}{% endfor %}</p>
+        <p class="text-danger">{% for  key,value in error.items %} <br/>{{ value }}{% endfor %}</p>
     {% endif %}
     <div id="Order">
         <form method="post" action="{% url 'step2' event.id %}">
